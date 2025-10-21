@@ -1597,7 +1597,7 @@
  </head>
  <body>
   <div id="splash-screen">
-   <video id="intro-video" width="100%" height="auto" autoplay loop muted style="max-width: 600px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+   <video id="intro-video" width="100%" height="auto" autoplay loop muted preload="auto" style="max-width: 600px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
     <source src="1000007047.mp4" type="video/mp4">
     Seu navegador não suporta a tag de vídeo.
    </video>
@@ -2022,7 +2022,7 @@
                 options: [
                     { text: "Nunca há sangramento", points: -5, feedback: "Pode sim haver sangramento devido à variação hormonal." },
                     { text: "Pode ocorrer sangramento até 15 dias após a ingestão", points: 50, feedback: "Correto! Pode ocorrer um sangramento até 15 dias após a ingestão da pílula, devido à variação hormonal provocada pelo hormônio." },
-                    { text: "Só há sangramento se não funcionar", points: 10, feedback: "O sangramento pode ocorrer independentemente da eficácia, é devido à variação hormonal." }
+                    { text: "Só se não funcionar", points: 10, feedback: "O sangramento pode ocorrer independentemente da eficácia, é devido à variação hormonal." }
                 ]
             },
             {
@@ -2045,7 +2045,7 @@
                 text: "A pílula do dia seguinte tem efeito colateral?",
                 options: [
                     { text: "Não, é completamente segura sem efeitos colaterais", points: -10, feedback: "Não é verdade! Devido à alta carga hormonal, pode ter efeitos colaterais." },
-                    { text: "Sim, devido à alta carga hormonal pode causar vários efeitos", points: 50, feedback: "Correto! Sim, devido a sua alta carga hormonal. Os mais comuns são: dores nas mamas e na barriga; diarreia; vômito; sangramento vaginal e atrasos na menstruação." },
+                    { text: "Sim, devido a sua alta carga hormonal pode causar vários efeitos", points: 50, feedback: "Correto! Sim, devido a sua alta carga hormonal. Os mais comuns são: dores nas mamas e na barriga; diarreia; vômito; sangramento vaginal e atrasos na menstruação." },
                     { text: "Apenas náuseas leves", points: 20, feedback: "Os efeitos podem ser mais variados: dores nas mamas e barriga, diarreia, vômito, sangramento e atrasos menstruais." }
                 ]
             },
@@ -2339,7 +2339,7 @@
             
             // Inicia o vídeo na tela inicial (desmutado e em loop)
             const videoEl = document.getElementById('intro-video');
-            videoEl.muted = false; // Tira o mudo para a fala ser ouvida
+            // videoEl.muted = false; // LINHA COMENTADA/REMOVIDA PARA GARANTIR AUTOPLAY MUDO
             videoEl.play().catch(error => {
                 console.log("Autoplay falhou. O usuário precisa interagir.", error);
                 // Permite o play manual ao clicar
@@ -3110,5 +3110,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d229a818ef1f2',t:'MTc2MTAxMTc1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d229a818ef1f2',t:'MTc2MTAxMTc1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';b.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
