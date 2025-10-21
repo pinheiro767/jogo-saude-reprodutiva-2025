@@ -2,14 +2,21 @@
 <html lang="pt-BR">
  <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sexualidade">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#2c3e50">
+  <meta name="msapplication-TileColor" content="#2c3e50">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-touch-fullscreen" content="yes">
   <title>Sexualidade: conhecendo o meu corpo e saúde reprodutiva</title>
   <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
   <style>
+        @view-transition { navigation: auto; }
         body {
             box-sizing: border-box;
             margin: 0;
@@ -25,6 +32,10 @@
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            -webkit-overflow-scrolling: touch;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
         body::before {
@@ -65,12 +76,21 @@
 
         html {
             height: 100%;
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+        }
+        
+        /* CSS Custom Properties for dynamic viewport */
+        :root {
+            --vh: 1vh;
         }
 
         .game-container {
             display: flex;
-            min-height: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
             position: relative;
+            flex-direction: row;
         }
 
         .sidebar {
@@ -81,6 +101,7 @@
             overflow-y: auto;
             backdrop-filter: blur(10px);
             -webkit-overflow-scrolling: touch;
+            flex-shrink: 0;
         }
 
         .main-content {
@@ -89,8 +110,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
             padding: 20px;
+            overflow: hidden;
         }
 
         .stats {
@@ -592,6 +615,7 @@
             0%, 100% { 
                 opacity: 0.4; 
                 transform: scale(1);
+                filter: blur(0.5px);
                 filter: blur(0.5px) brightness(1);
             }
             50% { 
@@ -862,7 +886,7 @@
                 opacity: 0.5;
             }
             50% { 
-                transform: translateY(10px) translateX(-10px) scale(0.9);
+                transform: translateX(-10px) translateY(20px) scale(0.9);
                 opacity: 0.4;
             }
             75% { 
@@ -958,7 +982,6 @@
         #start-button:hover {
             background: #45a049;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
         /* Confetti Animation */
@@ -1029,11 +1052,10 @@
             }
         }
 
-        /* Screen shake animation */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        /* Smooth pulse animation instead of shake */
+        @keyframes smoothPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         /* Phase completion modal */
@@ -1092,36 +1114,49 @@
         @media (max-width: 768px) {
             .game-container {
                 flex-direction: column;
+                min-height: 100vh;
+                min-height: 100dvh;
             }
             
             .sidebar {
                 width: 100%;
                 order: 2;
-                padding: 10px;
+                padding: 15px;
                 max-height: 40vh;
+                max-height: 40dvh;
+                flex-shrink: 0;
+                overflow-y: auto;
             }
             
             .main-content {
                 order: 1;
                 min-height: 60vh;
-                padding: 10px;
+                min-height: 60dvh;
+                padding: 15px;
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
             
             #boy-character {
-                width: 160px;
-                height: 160px;
-                font-size: 3em;
+                width: min(180px, 45vw);
+                height: min(180px, 45vw);
+                font-size: 3.5em;
+                margin: 0 auto;
             }
             
             #thought-bubble {
                 font-size: 0.9em;
                 padding: 12px 16px;
                 top: -50px;
+                max-width: 90vw;
+                white-space: normal;
             }
             
             .stats {
-                padding: 15px;
-                margin-bottom: 15px;
+                padding: 12px;
+                margin-bottom: 12px;
             }
             
             .job-option {
@@ -1137,6 +1172,10 @@
             #modal-content {
                 padding: 20px;
                 margin: 10px;
+                max-width: 95vw;
+                max-height: 90vh;
+                max-height: 90dvh;
+                overflow-y: auto;
             }
             
             #modal-content h3 {
@@ -1147,89 +1186,278 @@
             .modal-option {
                 font-size: 1em;
                 padding: 16px 12px;
+                margin: 8px 0;
+            }
+            
+            .game-board {
+                width: min(85vw, 450px);
+                height: min(85vw, 450px);
+                margin: 0 auto;
+            }
+            
+            .board-path {
+                width: min(75vw, 400px);
+                height: min(75vw, 400px);
+            }
+            
+            .board-info {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            
+            .board-controls {
+                bottom: 10px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .board-btn {
+                padding: 10px 16px;
+                font-size: 0.9em;
+                min-width: auto;
+            }
+            
+            #dice-container {
+                /* Esconder no modo mobile onde o foco é o clique no botão */
+                display: none !important;
             }
         }
         
         @media (max-width: 480px) {
+            body {
+                padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            }
+            
             .sidebar {
-                padding: 8px;
+                padding: 12px;
+                max-height: 35vh;
+                max-height: 35dvh;
+            }
+            
+            .main-content {
+                min-height: 65vh;
+                min-height: 65dvh;
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
             
             #boy-character {
-                width: 140px;
-                height: 140px;
-                font-size: 2.5em;
+                width: min(160px, 40vw);
+                height: min(160px, 40vw);
+                font-size: 3em;
+                margin: 0 auto;
             }
             
             #thought-bubble {
                 font-size: 0.8em;
-                padding: 10px 14px;
-                top: -45px;
+                padding: 8px 12px;
+                top: -40px;
+                max-width: 85vw;
+                left: 50%;
+                transform: translateX(-50%);
             }
             
             .btn {
-                padding: 12px 20px;
-                font-size: 1em;
-                margin: 5px;
+                padding: 12px 16px;
+                font-size: 0.9em;
+                margin: 4px;
+                min-height: 44px;
             }
             
             .stats h3 {
-                font-size: 1.1em;
+                font-size: 1em;
+                margin-bottom: 10px;
             }
             
             .stat-item {
-                font-size: 0.9em;
+                font-size: 0.85em;
                 padding: 6px;
+                margin-bottom: 6px;
+            }
+            
+            .job-option {
+                padding: 10px;
+                margin-bottom: 6px;
             }
             
             .job-name {
-                font-size: 0.9em;
+                font-size: 0.85em;
             }
             
             .job-reward {
-                font-size: 0.8em;
+                font-size: 0.75em;
+            }
+            
+            .job-icon {
+                font-size: 1.3em;
+                margin-right: 8px;
             }
 
             .game-board {
-                width: 95%;
-                height: 70vh;
-                max-width: 500px;
+                width: min(90vw, 380px);
+                height: min(90vw, 380px);
+                border-width: 4px;
+                margin: 0 auto;
             }
 
             .board-path {
-                top: 20px;
-                left: 20px;
-                right: 20px;
-                bottom: 80px;
-                padding: 10px;
-                gap: 8px;
-                grid-template-columns: repeat(5, 1fr);
-                grid-template-rows: repeat(4, 1fr);
+                width: min(80vw, 330px);
+                height: min(80vw, 330px);
             }
-
+            
             .board-square {
-                min-height: 60px;
-                font-size: 0.7em;
+                width: 50px;
+                height: 50px;
+                font-size: 0.6em;
+                border-width: 2px;
             }
-
-            .roulette-wheel {
-                width: 200px;
-                height: 200px;
+            
+            .player-piece {
+                width: 35px;
+                height: 35px;
+                font-size: 1.3em;
+                border-width: 3px;
+            }
+            
+            .dice {
+                width: 80px;
+                height: 80px;
+                border-width: 3px;
+            }
+            
+            .dice-dots {
+                width: 60px;
+                height: 60px;
+                gap: 6px;
+            }
+            
+            .dice-dot {
+                width: 12px;
+                height: 12px;
+            }
+            
+            .board-info {
+                padding: 8px;
+                font-size: 0.8em;
+                top: 5px;
+                right: 5px;
+                left: 5px;
+            }
+            
+            .board-controls {
+                bottom: 5px;
+                gap: 6px;
+            }
+            
+            .board-btn {
+                padding: 8px 12px;
+                font-size: 0.8em;
+                border-radius: 20px;
+            }
+            
+            #modal-content {
+                padding: 15px;
+                margin: 5px;
+                border-radius: 15px;
+            }
+            
+            #modal-content h3 {
+                font-size: 1em;
+                margin-bottom: 15px;
+            }
+            
+            .modal-option {
+                font-size: 0.9em;
+                padding: 14px 10px;
+                margin: 6px 0;
+                border-radius: 8px;
+            }
+            
+            #splash-screen h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+                padding: 0 10px;
+                text-align: center;
+            }
+            
+            #splash-screen p {
+                font-size: 0.9em;
+                padding: 0 15px;
+                text-align: center;
+            }
+            
+            #start-button {
+                padding: 12px 24px;
+                font-size: 1em;
+            }
+            
+            .message {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                padding: 12px 15px;
+                font-size: 0.9em;
+                text-align: center;
+            }
+            
+            #mute-button {
+                bottom: 10px;
+                right: 10px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.3em;
             }
         }
 
         /* Interactive Board Game Styles */
         .game-board {
             position: relative;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 100%);
-            border-radius: 20px;
-            border: 4px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: min(700px, 90vw);
+            height: min(700px, 90vw);
+            max-width: 700px;
+            max-height: 700px;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 20% 80%, rgba(30, 144, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(255, 20, 147, 0.1) 0%, transparent 40%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 100% 100%, 200% 200%, 200% 200%, 400% 400%;
+            border-radius: 50%;
+            border: 6px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 0 50px rgba(138, 43, 226, 0.3),
+                0 20px 60px rgba(0,0,0,0.4),
+                inset 0 0 100px rgba(255,255,255,0.1);
             display: none;
             overflow: hidden;
+            animation: boardPulse 8s ease-in-out infinite;
+            margin: auto;
+        }
+
+        @keyframes boardPulse {
+            0%, 100% { 
+                transform: scale(1) rotate(0deg);
+                box-shadow: 
+                    0 0 50px rgba(138, 43, 226, 0.3),
+                    0 20px 60px rgba(0,0,0,0.4),
+                    inset 0 0 100px rgba(255,255,255,0.1);
+            }
+            50% { 
+                transform: scale(1.02) rotate(1deg);
+                box-shadow: 
+                    0 0 80px rgba(138, 43, 226, 0.5),
+                    0 25px 70px rgba(0,0,0,0.6),
+                    inset 0 0 120px rgba(255,255,255,0.15);
+            }
         }
 
         .game-board.active {
@@ -1238,100 +1466,165 @@
 
         .board-path {
             position: absolute;
-            top: 30px;
-            left: 30px;
-            right: 30px;
-            bottom: 100px;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(4, 1fr);
-            gap: 10px;
-            padding: 20px;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            transform: translate(-50%, -50%);
         }
 
         .board-square {
-            width: 100%;
-            height: 100%;
-            min-height: 80px;
-            border-radius: 15px;
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.8em;
+            font-size: 0.7em;
             font-weight: bold;
             color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 3px solid rgba(255,255,255,0.6);
+            box-shadow: 
+                0 8px 25px rgba(0,0,0,0.4),
+                inset 0 2px 10px rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
         }
 
         .board-square::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s ease;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: squareRotate 3s linear infinite;
+            z-index: -1;
         }
 
-        .board-square:hover::before {
-            left: 100%;
+        @keyframes squareRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .board-square:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            transform: scale(1.2) translateZ(10px);
+            box-shadow: 
+                0 15px 40px rgba(0,0,0,0.6),
+                0 0 30px rgba(255,255,255,0.5),
+                inset 0 2px 15px rgba(255,255,255,0.4);
         }
 
         .board-square.start {
-            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(0,255,136,0.9) 0%, rgba(0,204,106,0.7) 100%),
+                linear-gradient(135deg, #00ff88, #00cc6a);
             animation: startPulse 2s ease-in-out infinite;
+            box-shadow: 
+                0 0 30px rgba(0,255,136,0.6),
+                0 8px 25px rgba(0,0,0,0.4),
+                inset 0 2px 10px rgba(255,255,255,0.3);
         }
 
         .board-square.finish {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,215,0,0.9) 0%, rgba(255,165,0,0.7) 100%),
+                linear-gradient(135deg, #FFD700, #FFA500);
             animation: finishGlow 3s ease-in-out infinite;
+            box-shadow: 
+                0 0 40px rgba(255,215,0,0.8),
+                0 8px 25px rgba(0,0,0,0.4),
+                inset 0 2px 10px rgba(255,255,255,0.3);
         }
 
         .board-square.question {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(116,185,255,0.9) 0%, rgba(9,132,227,0.7) 100%),
+                linear-gradient(135deg, #74b9ff, #0984e3);
+            box-shadow: 
+                0 0 20px rgba(116,185,255,0.4),
+                0 8px 25px rgba(0,0,0,0.4),
+                inset 0 2px 10px rgba(255,255,255,0.3);
         }
 
         .board-square.bonus {
-            background: linear-gradient(135deg, #fd79a8, #e84393);
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(253,121,168,0.9) 0%, rgba(232,67,147,0.7) 100%),
+                linear-gradient(135deg, #fd79a8, #e84393);
+            animation: bonusPulse 2.5s ease-in-out infinite;
+            box-shadow: 
+                0 0 25px rgba(253,121,168,0.5),
+                0 8px 25px rgba(0,0,0,0.4),
+                inset 0 2px 10px rgba(255,255,255,0.3);
         }
 
         .board-square.challenge {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,107,107,0.9) 0%, rgba(238,90,36,0.7) 100%),
+                linear-gradient(135deg, #ff6b6b, #ee5a24);
+            animation: challengePulse 1.8s ease-in-out infinite;
+            box-shadow: 
+                0 0 30px rgba(255,107,107,0.6),
+                0 8px 25px rgba(0,0,0,0.4),
+                inset 0 2px 10px rgba(255,255,255,0.3);
+        }
+
+        @keyframes bonusPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 25px rgba(253,121,168,0.5),
+                    0 8px 25px rgba(0,0,0,0.4),
+                    inset 0 2px 10px rgba(255,255,255,0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 
+                    0 0 35px rgba(253,121,168,0.8),
+                    0 12px 30px rgba(0,0,0,0.6),
+                    inset 0 2px 15px rgba(255,255,255,0.4);
+            }
+        }
+
+        @keyframes challengePulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 30px rgba(255,107,107,0.6),
+                    0 8px 25px rgba(0,0,0,0.4),
+                    inset 0 2px 10px rgba(255,255,255,0.3);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 
+                    0 0 45px rgba(255,107,107,0.9),
+                    0 15px 35px rgba(0,0,0,0.7),
+                    inset 0 2px 15px rgba(255,255,255,0.4);
+            }
         }
 
         .board-square.visited {
-            opacity: 0.6;
-            transform: scale(0.9);
+            opacity: 0;
+            transform: scale(0.3);
             cursor: not-allowed;
-            filter: grayscale(50%);
+            filter: grayscale(100%);
+            transition: all 0.8s ease-out;
+            pointer-events: none;
         }
 
         .board-square.visited:hover {
-            transform: scale(0.9) !important;
+            transform: scale(0.3) !important;
             box-shadow: none !important;
         }
 
         .board-square.visited::after {
-            content: '🚫';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5em;
-            opacity: 0.7;
-            z-index: 10;
+            content: '';
         }
 
         .board-square.current {
@@ -1341,13 +1634,14 @@
         }
 
         .board-square.future {
-            opacity: 0.4;
+            opacity: 0.3; /* Mais discreto no futuro */
             cursor: not-allowed;
-            filter: grayscale(80%);
+            filter: grayscale(80%) brightness(0.6);
+            pointer-events: none;
         }
 
         .board-square.future:hover {
-            transform: scale(1) !important;
+            transform: scale(0.9) !important;
             box-shadow: none !important;
         }
 
@@ -1375,170 +1669,55 @@
 
         @keyframes currentSquare {
             0%, 100% { 
-                transform: scale(1);
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-            }
-            50% { 
                 transform: scale(1.1);
-                box-shadow: 0 0 35px rgba(255, 215, 0, 1);
-            }
-        }
-
-        /* Roulette Wheel Styles */
-        .roulette-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-        }
-
-        .roulette-wheel {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            position: relative;
-            background: conic-gradient(
-                #ff6b6b 0deg 60deg,
-                #4ecdc4 60deg 120deg,
-                #45b7d1 120deg 180deg,
-                #96ceb4 180deg 240deg,
-                #feca57 240deg 300deg,
-                #ff9ff3 300deg 360deg
-            );
-            border: 8px solid white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            animation: rouletteIdle 4s ease-in-out infinite;
-        }
-
-        .roulette-wheel:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        }
-
-        .roulette-wheel.spinning {
-            animation: rouletteSpin 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-
-        .roulette-pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #FFD700;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
-            z-index: 11;
-        }
-
-        .roulette-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            color: white;
-            font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            border: 4px solid white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .roulette-numbers {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .roulette-number {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.7);
-            font-size: 1.2em;
-        }
-
-        .roulette-number:nth-child(1) { top: 15px; left: 50%; transform: translateX(-50%); }
-        .roulette-number:nth-child(2) { top: 30px; right: 30px; }
-        .roulette-number:nth-child(3) { top: 50%; right: 15px; transform: translateY(-50%); }
-        .roulette-number:nth-child(4) { bottom: 30px; right: 30px; }
-        .roulette-number:nth-child(5) { bottom: 15px; left: 50%; transform: translateX(-50%); }
-        .roulette-number:nth-child(6) { bottom: 30px; left: 30px; }
-
-        @keyframes rouletteIdle {
-            0%, 100% { 
-                transform: rotate(0deg) scale(1);
+                box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 20px rgba(255, 215, 0, 0.5);
             }
             50% { 
-                transform: rotate(5deg) scale(1.02);
+                transform: scale(1.15);
+                box-shadow: 0 0 60px rgba(255, 215, 0, 1), 0 0 30px rgba(255, 215, 0, 0.8);
             }
         }
-
-        @keyframes rouletteSpin {
-            0% { 
-                transform: rotate(0deg);
-            }
-            100% { 
-                transform: rotate(1800deg);
-            }
-        }
-
+        
         /* Player piece */
         .player-piece {
             position: absolute;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            width: 50px;
+            height: 50px;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255,215,0,1) 0%, rgba(255,165,0,0.8) 100%),
+                linear-gradient(135deg, #FFD700, #FFA500);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5em;
+            font-size: 1.8em;
             color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            border: 3px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 5;
-            transition: all 0.5s ease;
-            animation: playerBounce 2s ease-in-out infinite;
+            text-shadow: 
+                0 2px 8px rgba(0,0,0,0.8),
+                0 0 20px rgba(255,215,0,0.6);
+            border: 4px solid rgba(255,255,255,0.9);
+            box-shadow: 
+                0 0 30px rgba(255,215,0,0.8),
+                0 8px 25px rgba(0,0,0,0.5),
+                inset 0 2px 15px rgba(255,255,255,0.4);
+            z-index: 10;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: playerFloat 3s ease-in-out infinite;
         }
 
-        @keyframes playerBounce {
-            0%, 100% { 
-                transform: translateY(0px) scale(1);
-            }
-            50% { 
-                transform: translateY(-5px) scale(1.1);
-            }
-        }
-
+        /* Removido o dice-container, pois a função foi substituída pelo botão */
+        
         /* Board controls */
         .board-controls {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 15px;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 90%;
         }
 
         .board-btn {
@@ -1571,14 +1750,16 @@
         /* Board info panel */
         .board-info {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.9);
-            padding: 15px;
-            border-radius: 15px;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.95);
+            padding: 12px;
+            border-radius: 12px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            min-width: 180px;
+            max-width: 250px;
+            font-size: 0.9em;
         }
 
         .board-info h4 {
@@ -1594,8 +1775,6 @@
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
  <body>
     <audio id="bgm" src="bgm.mp3" loop preload="auto"></audio>
@@ -1629,10 +1808,10 @@
     <div class="splash-particle">
      🌿
     </div>
-    <div class="particle">
+    <div class="splash-particle">
      💜
     </div>
-    <div class="particle">
+    <div class="splash-particle">
      🌺
     </div>
    </div>
@@ -1758,35 +1937,10 @@
      <div class="player-piece" id="player-piece">
       🎯
      </div>
-     <div class="roulette-container" id="roulette-container" style="display: none;">
-      <div class="roulette-pointer"></div>
-      <div class="roulette-wheel" id="roulette-wheel" onclick="spinRoulette()">
-       <div class="roulette-numbers">
-        <div class="roulette-number">
-         1
-        </div>
-        <div class="roulette-number">
-         2
-        </div>
-        <div class="roulette-number">
-         3
-        </div>
-        <div class="roulette-number">
-         4
-        </div>
-        <div class="roulette-number">
-         5
-        </div>
-        <div class="roulette-number">
-         6
-        </div>
-       </div>
-       <div class="roulette-center">
-        🎲
-       </div>
-      </div>
-     </div>
-     <div class="board-controls"><button class="board-btn" id="roll-dice-btn" onclick="showRoulette()">🎲 Girar Roleta</button> <button class="board-btn" id="test-question-btn" onclick="triggerBoardQuestion()">❓ Testar Pergunta</button> <button class="board-btn" id="board-help-btn" onclick="showBoardHelp()">ℹ️ Ajuda</button>
+     <div class="board-controls">
+        <button class="board-btn" id="advance-btn" onclick="advanceSquare()">⏩ Avançar 1 Casa</button> 
+        <button class="board-btn" id="test-question-btn" onclick="triggerBoardQuestion()">❓ Testar Pergunta</button> 
+        <button class="board-btn" id="board-help-btn" onclick="showBoardHelp()">ℹ️ Ajuda</button>
      </div>
     </div>
    </div>
@@ -1823,12 +1977,11 @@
         let usedQuestions = [];
         
         // --- INSTANCIANDO OBJETOS DE ÁUDIO ---
-        // Caminhos de áudio corrigidos para a raiz:
         const bgm = document.getElementById('bgm');
         const sfxCoin = document.getElementById('sfxCoin');
         const sfxError = document.getElementById('sfxError');
         const sfxWin = document.getElementById('sfxWin');
-        const sfxDiceRoll = document.getElementById('sfxDiceRoll');
+        const sfxDiceRoll = document.getElementById('sfxDiceRoll'); // Mantido apenas para compatibilidade
         const sfxMove = document.getElementById('sfxMove');
         
         function playAudio(audioElement, volume = 1.0) {
@@ -1858,7 +2011,8 @@
             totalMoves: 0,
             boardSquares: [],
             isRolling: false,
-            questionsAnswered: 0
+            questionsAnswered: 0,
+            lastDiceRoll: 0 // Mantido
         };
 
         // Phase configuration
@@ -1902,7 +2056,7 @@
         };
 
         // Educational scenarios about sexual health with animated character images
-        // OBS: Array de cenários reduzido para economizar espaço de resposta, 
+        // NOTE: Array de cenários reduzido para economizar espaço de resposta, 
         // mantendo as 10 perguntas de risco V/F (índices 45 a 54) e as 45 informativas.
         const scenarios = [
             {
@@ -1910,7 +2064,7 @@
                 text: "Qual o erro mais comum ao usar um preservativo masculino e como corrigi-lo?",
                 options: [
                     { text: "Não verificar o prazo de validade", points: 20, feedback: "Importante, mas não é o erro mais comum." },
-                    { text: "Não retirar o ar da ponta antes de desenrolar", points: 50, feedback: "Correto! O erro mais comum é não apertar suavemente a ponta (reservatório) antes de colocar, o que pode criar bolhas de ar e fazer o preservativo estourar." },
+                    { text: "Não retirar o ar da ponta antes de desenrolar", points: 50, feedback: "Correto! O erro mais comum é não apertar suavemente a ponta (reservatório) antes de colocar, o que pode criar bolhas de air e fazer o preservativo estourar." },
                     { text: "Usar o tamanho errado", points: 30, feedback: "Também é importante, mas o erro mais comum é não retirar o ar da ponta." }
                 ],
                 tipo: "Informativa",
@@ -2066,7 +2220,7 @@
                 options: [
                     { text: "Sempre após qualquer relação sexual", points: -15, feedback: "Não! Apenas em situações de emergência, não após toda relação." },
                     { text: "Quando o preservativo rasga ou estoura", points: 50, feedback: "Correto! Deve ser utilizada quando o preservativo rasga ou estoura, mas lembre-se: uma visita ao ginecologista é sempre importante." },
-                    { text: "Uma vez por mês como prevenção", points: -10, feedback: "Não é para prevenção regular! Apenas para emergências pontuais." }
+                    { text: "Uma vez por mês como prevenção", points: -10, feedback: "Não! É para prevenção regular! Apenas para emergências pontuais." }
                 ],
                 character_type: "girl"
             },
@@ -2098,7 +2252,7 @@
                 character_type: "boy"
             },
             {
-                text: "Mito ou Verdade: A ducha vaginal após a relação sexual previne gravidez e IST.",
+                text: "Mito ou Verdade: A ducha vaginal após a relação sexual previne gravidez e IST?",
                 options: [
                     { text: "Verdade, limpa e protege", points: -15, feedback: "Mito! A ducha pode ser prejudicial e não oferece proteção." },
                     { text: "Mito, pode empurrar bactérias para dentro e desequilibrar a flora", points: 50, feedback: "Correto! Mito. A ducha pode na verdade empurrar bactérias e vírus para dentro do colo do útero, além de desequilibrar a flora vaginal, aumentando o risco de infecções." },
@@ -2312,7 +2466,7 @@
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ A eficácia da pílula depende da tomada correta e diária. Se você falhar um dia, a proteção pode ser reduzida, e métodos de proteção adicionais (como o preservativo) devem ser usados nos dias seguintes, conforme as indicações médicas. BÔNUS: +75 pontos!" },
                     { text: "Depende do tipo de pílula", points: 10, feedback: "Embora diferentes pílulas tenham instruções específicas, o princípio geral é que esquecer reduz a eficácia e requer proteção adicional." }
                 ],
-                tipo: "Risco F/V",
+                tipo: "Risco V/F",
                 resposta_correta_bool: "FALSO",
                 character_type: "boy"
             },
@@ -2324,7 +2478,7 @@
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ Usar dois preservativos aumenta o atrito entre eles, fazendo com que ambos se rasguem mais facilmente. Use sempre apenas um preservativo de cada vez. BÔNUS: +75 pontos!" },
                     { text: "Depende do tipo de preservativo", points: 10, feedback: "Não depende! Qualquer combinação de dois preservativos cria atrito perigoso que pode rasgar ambos." }
                 ],
-                tipo: "Risco F/V",
+                tipo: "Risco V/F",
                 resposta_correta_bool: "FALSO",
                 character_type: "boy"
             },
@@ -2408,17 +2562,27 @@
             updatePhaseDisplay();
             document.getElementById('start-button').addEventListener('click', startGame);
             
-            // O vídeo NÃO é mais iniciado automaticamente aqui para respeitar a política de navegadores.
-            // A reprodução é gerenciada pelo clique do usuário no botão START ou no próprio player do vídeo.
+            // Inicia o vídeo (agora com controls, mas desmutado por padrão)
+            const videoEl = document.getElementById('intro-video');
+            videoEl.muted = false; 
             
             // Inicia a música de fundo (volume baixo, loop)
+            const bgm = document.getElementById('bgm');
             bgm.volume = 0.2;
             bgm.loop = true;
-            // A reprodução é tentada, mas pode precisar de interação do usuário (clique no botão START).
             bgm.play().catch(e => console.log("Erro ao iniciar BGM:", e));
+
+            // Ajusta o tamanho da peça do jogador na inicialização
+            window.dispatchEvent(new Event('resize'));
         }
 
         function startGame() {
+            // Tenta garantir que o BGM inicie com a primeira interação (o clique no START)
+            const bgm = document.getElementById('bgm');
+            if (bgm.paused) {
+                bgm.play().catch(e => console.log("Erro ao iniciar BGM após clique:", e));
+            }
+            
             const splashScreen = document.getElementById('splash-screen');
             splashScreen.style.opacity = '0';
             setTimeout(() => {
@@ -2427,11 +2591,6 @@
             
             // Pausa o vídeo ao sair da splash screen
             document.getElementById('intro-video').pause();
-
-            // Tenta garantir que o BGM inicie com a primeira interação (o clique no START)
-            if (bgm.paused) {
-                bgm.play().catch(e => console.log("Erro ao iniciar BGM após clique:", e));
-            }
         }
 
         function updateDisplay() {
@@ -2489,14 +2648,13 @@
 
         // Board Game Functions
         function resetBoardForNewPhase() {
-            // Reset board state for new phase
             boardState.currentPosition = 0;
             boardState.totalMoves = 0;
             boardState.boardSquares = [];
             boardState.isRolling = false;
             boardState.questionsAnswered = 0;
+            boardState.lastDiceRoll = 0;
             
-            // Clear existing board
             const boardPath = document.getElementById('board-path');
             if (boardPath) {
                 boardPath.innerHTML = '';
@@ -2506,19 +2664,19 @@
         function initializeBoard() {
             const currentPhaseData = phases[gameStats.currentPhase];
             
-            // Update board info
             document.getElementById('board-phase-title').textContent = currentPhaseData.name;
-            document.getElementById('board-position').textContent = `Posição: Casa ${boardState.currentPosition + 1}`;
-            document.getElementById('board-moves').textContent = `Movimentos: ${boardState.totalMoves}`;
-            document.getElementById('board-questions').textContent = `Perguntas: ${gameStats.phaseProgress}/${gameStats.questionsPerPhase}`;
+            document.getElementById('board-position').textContent = `🎯 Casa: ${boardState.currentPosition + 1}/20`;
+            document.getElementById('board-moves').textContent = `🎲 Jogadas: ${boardState.totalMoves}`;
+            document.getElementById('board-questions').textContent = `❓ Perguntas: ${gameStats.phaseProgress}/${gameStats.questionsPerPhase}`;
             
-            // Generate board squares if not already done
             if (boardState.boardSquares.length === 0) {
                 generateBoardPath();
             }
             
-            // Position player piece
             updatePlayerPosition();
+            // A casa inicial não deve permitir "Avançar" imediatamente
+            const advanceBtn = document.getElementById('advance-btn');
+            advanceBtn.disabled = false; 
         }
 
         function generateBoardPath() {
@@ -2526,18 +2684,44 @@
             boardPath.innerHTML = '';
             boardState.boardSquares = [];
             
-            // Create 20 squares in a linear path (4 rows of 5 squares each)
             const totalSquares = 20;
             const squareTypes = ['start', 'question', 'question', 'bonus', 'question', 'question', 'challenge', 'question', 'question', 'question', 'bonus', 'question', 'question', 'challenge', 'question', 'question', 'question', 'bonus', 'question', 'finish'];
             const squareIcons = ['🏁', '❓', '❓', '💎', '❓', '❓', '⚡', '❓', '❓', '❓', '💎', '❓', '❓', '⚡', '❓', '❓', '❓', '💎', '❓', '🏆'];
             const squareTexts = ['INÍCIO', 'Pergunta', 'Pergunta', 'Bônus', 'Pergunta', 'Pergunta', 'Desafio', 'Pergunta', 'Pergunta', 'Pergunta', 'Bônus', 'Pergunta', 'Pergunta', 'Desafio', 'Pergunta', 'Pergunta', 'Pergunta', 'Bônus', 'Pergunta', 'FIM'];
             
+            const gameBoard = document.getElementById('game-board');
+            const boardRect = gameBoard.getBoundingClientRect();
+            const boardSize = Math.min(boardRect.width, boardRect.height);
+            
+            const centerX = boardSize / 2;
+            const centerY = boardSize / 2;
+            const maxRadius = (boardSize * 0.35); 
+            const squareSize = Math.max(50, Math.min(70, boardSize * 0.1)); 
+            
             for (let i = 0; i < totalSquares; i++) {
                 const square = document.createElement('div');
                 square.className = `board-square ${squareTypes[i]}`;
+                
+                const progress = i / (totalSquares - 1); 
+                const angle = progress * Math.PI * 6; 
+                const radius = maxRadius * (1 - progress * 0.8); 
+                
+                const x = centerX + Math.cos(angle) * radius - (squareSize / 2);
+                const y = centerY + Math.sin(angle) * radius - (squareSize / 2);
+                
+                square.style.width = squareSize + 'px';
+                square.style.height = squareSize + 'px';
+                square.style.left = x + 'px';
+                square.style.top = y + 'px';
+                
+                const iconSize = Math.max(0.8, squareSize / 60);
+                const textSize = Math.max(0.4, squareSize / 140);
+                const numberSize = Math.max(0.5, squareSize / 120);
+                
                 square.innerHTML = `
-                    <div style="font-size: 1.3em;">${squareIcons[i]}</div>
-                    <div style="font-size: 0.65em; margin-top: 2px; text-align: center;">${squareTexts[i]}</div>
+                    <div style="position: absolute; top: -6px; right: -6px; font-size: ${numberSize}em; font-weight: bold; background: rgba(255,255,255,0.9); color: #333; padding: 2px 6px; border-radius: 50%; min-width: ${Math.max(16, squareSize * 0.25)}px; height: ${Math.max(16, squareSize * 0.25)}px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">${i + 1}</div>
+                    <div style="font-size: ${iconSize}em; margin-bottom: 2px;">${squareIcons[i]}</div>
+                    <div style="font-size: ${textSize}em; text-align: center; line-height: 1; font-weight: bold;">${squareTexts[i]}</div>
                 `;
                 square.dataset.index = i;
                 square.onclick = () => handleSquareClick(i);
@@ -2547,7 +2731,9 @@
                     element: square,
                     type: squareTypes[i],
                     visited: false,
-                    position: i
+                    position: i,
+                    x: x + (squareSize / 2),
+                    y: y + (squareSize / 2)
                 });
             }
         }
@@ -2556,89 +2742,98 @@
             const playerPiece = document.getElementById('player-piece');
             const currentSquare = boardState.boardSquares[boardState.currentPosition];
             
-            if (currentSquare && currentSquare.element) {
-                const rect = currentSquare.element.getBoundingClientRect();
-                const boardRect = document.getElementById('game-board').getBoundingClientRect();
+            if (currentSquare) {
+                playerPiece.style.left = (currentSquare.x - 25) + 'px';
+                playerPiece.style.top = (currentSquare.y - 25) + 'px';
                 
-                playerPiece.style.left = (rect.left - boardRect.left + rect.width/2 - 20) + 'px';
-                playerPiece.style.top = (rect.top - boardRect.top + rect.height/2 - 20) + 'px';
-                
-                // Update all square states based on player position
                 boardState.boardSquares.forEach((square, index) => {
                     square.element.classList.remove('current', 'visited', 'future');
                     
                     if (index === boardState.currentPosition) {
-                        // Current square - active and clickable
                         square.element.classList.add('current');
+                        square.element.style.opacity = '1';
+                        square.element.style.transform = 'scale(1.1)';
+                        square.element.style.pointerEvents = 'auto';
                         square.visited = true;
                     } else if (index < boardState.currentPosition) {
-                        // Previous squares - visited and blocked
+                        square.element.style.opacity = '0';
+                        square.element.style.transform = 'scale(0.3) rotate(180deg)';
+                        square.element.style.pointerEvents = 'none';
                         square.element.classList.add('visited');
                         square.visited = true;
                     } else {
-                        // Future squares - not accessible yet
                         square.element.classList.add('future');
+                        square.element.style.opacity = '0.3';
+                        square.element.style.transform = 'scale(0.9)';
+                        square.element.style.pointerEvents = 'none';
                     }
                 });
+                
+                createPlayerTrail();
             }
         }
 
-        function showRoulette() {
-            if (boardState.isRolling) return;
+        function createPlayerTrail() {
+            const playerPiece = document.getElementById('player-piece');
+            const rect = playerPiece.getBoundingClientRect();
+            const boardRect = document.getElementById('game-board').getBoundingClientRect();
             
-            const rouletteContainer = document.getElementById('roulette-container');
-            const rollButton = document.getElementById('roll-dice-btn');
-            
-            rouletteContainer.style.display = 'block';
-            rollButton.disabled = true;
-            rollButton.textContent = '🎲 Girando...';
-            
-            playAudio(sfxDiceRoll, 0.8);
+            for (let i = 0; i < 3; i++) {
+                const trail = document.createElement('div');
+                trail.style.position = 'absolute';
+                trail.style.left = (rect.left - boardRect.left + rect.width/2 - 5) + 'px';
+                trail.style.top = (rect.top - boardRect.top + rect.height/2 - 5) + 'px';
+                trail.style.width = '10px';
+                trail.style.height = '10px';
+                trail.style.borderRadius = '50%';
+                trail.style.background = `radial-gradient(circle, rgba(255,215,0,${0.8 - i * 0.2}) 0%, transparent 70%)`;
+                trail.style.pointerEvents = 'none';
+                trail.style.zIndex = '5';
+                trail.style.animation = `trailFade ${1 + i * 0.3}s ease-out forwards`;
+                
+                document.getElementById('game-board').appendChild(trail);
+                
+                setTimeout(() => {
+                    if (trail.parentNode) {
+                        trail.remove();
+                    }
+                }, (1 + i * 0.3) * 1000);
+            }
         }
 
-        function spinRoulette() {
-            if (boardState.isRolling) return;
-            
-            boardState.isRolling = true;
-            const rouletteWheel = document.getElementById('roulette-wheel');
-            const rollButton = document.getElementById('roll-dice-btn');
-            
-            rouletteWheel.classList.add('spinning');
-            
-            // Generate random result (1-6)
-            const result = Math.floor(Math.random() * 6) + 1;
-            
-            setTimeout(() => {
-                rouletteWheel.classList.remove('spinning');
-                document.getElementById('roulette-container').style.display = 'none';
-                
-                // Move player
-                movePlayer(result);
-                
-                rollButton.disabled = false;
-                rollButton.textContent = '🎲 Girar Roleta';
-                boardState.isRolling = false;
-                
-                showMessage(`🎲 Você tirou ${result}! Movendo ${result} casa${result > 1 ? 's' : ''}...`, 'info');
-            }, 3000);
-        }
+        const trailStyle = document.createElement('style');
+        trailStyle.textContent = `
+            @keyframes trailFade {
+                0% { 
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                100% { 
+                    opacity: 0;
+                    transform: scale(0.3) translateY(-20px);
+                }
+            }
+        `;
+        document.head.appendChild(trailStyle);
 
-        function movePlayer(steps) {
-            boardState.totalMoves++;
-            
-            // Calculate new position (ONLY forward movement allowed)
+        function advanceSquare() {
             const maxPosition = boardState.boardSquares.length - 1;
-            const newPosition = Math.min(boardState.currentPosition + steps, maxPosition);
             
-            // Only move forward - never backward
-            if (newPosition > boardState.currentPosition) {
-                // Animate movement step by step (only forward)
-                let targetPosition = newPosition;
+            if (boardState.currentPosition < maxPosition) {
+                // Move player one step forward
+                const newPosition = boardState.currentPosition + 1;
+                
+                // Animate movement step by step
                 const moveInterval = setInterval(() => {
-                    if (boardState.currentPosition < targetPosition) {
+                    if (boardState.currentPosition < newPosition) {
                         boardState.currentPosition++;
                         updatePlayerPosition();
-                        playAudio(sfxMove, 0.3); // Toca o som de movimento a cada passo
+                        playAudio(sfxMove, 0.3);
+                        
+                        // Update board info
+                        document.getElementById('board-position').textContent = `🎯 Casa: ${boardState.currentPosition + 1}/20`;
+                        document.getElementById('board-moves').textContent = `🎲 Jogadas: ${++boardState.totalMoves}`;
+
                     } else {
                         clearInterval(moveInterval);
                         
@@ -2646,56 +2841,57 @@
                         const currentSquare = boardState.boardSquares[boardState.currentPosition];
                         handleSquareLanding(currentSquare);
                         
-                        // Update board info
-                        document.getElementById('board-position').textContent = `Posição: Casa ${boardState.currentPosition + 1}`;
-                        document.getElementById('board-moves').textContent = `Movimentos: ${boardState.totalMoves}`;
+                        // Re-enable Advance button after landing and handling
+                        document.getElementById('advance-btn').disabled = false;
                     }
                 }, 500);
-            } else if (boardState.currentPosition === maxPosition) {
-                // If already at final position, complete the phase
-                showMessage('🏆 Você já está na casa final!', 'info');
-                const currentSquare = boardState.boardSquares[boardState.currentPosition];
-                handleSquareLanding(currentSquare);
-                document.getElementById('board-position').textContent = `Posição: Casa ${boardState.currentPosition + 1}`;
-                document.getElementById('board-moves').textContent = `Movimentos: ${boardState.totalMoves}`;
+                
+                // Temporarily disable advance button during movement
+                document.getElementById('advance-btn').disabled = true;
+
             } else {
-                // This should never happen with forward-only movement, but just in case
-                showMessage('⚠️ Movimento inválido - apenas para frente!', 'warning');
-                document.getElementById('board-position').textContent = `Posição: Casa ${boardState.currentPosition + 1}`;
-                document.getElementById('board-moves').textContent = `Movimentos: ${boardState.totalMoves}`;
+                showMessage('🏆 Você já está na casa final!', 'success');
+                completePhase();
+            }
+        }
+
+        // Renomeada de showDice para advanceSquare, e implementada com o novo fluxo
+        function showDice() {
+            advanceSquare();
+        }
+
+        function playSound(audioElement, volume = 1.0) {
+            const audio = document.getElementById(audioElement);
+            if (audio && !isMuted) {
+                audio.currentTime = 0;
+                audio.volume = volume;
+                audio.play().catch(e => console.log("Erro ao tocar áudio:", e));
             }
         }
 
         function handleSquareLanding(square) {
-            // Add visual feedback for landing
             showMessage(`Você pousou em uma casa ${square.type === 'question' ? 'de pergunta ❓' : square.type === 'bonus' ? 'bônus 💎' : square.type === 'challenge' ? 'desafio ⚡' : square.type === 'finish' ? 'final 🏆' : 'inicial 🏁'}!`, 'info');
+            
+            const testBtn = document.getElementById('test-question-btn');
+            testBtn.disabled = true; // Desabilita o botão por padrão
             
             switch (square.type) {
                 case 'question':
-                    // Automatically trigger question when landing on question square
-                    setTimeout(() => triggerBoardQuestion(), 1000);
+                case 'challenge':
+                    // Permite testar pergunta
+                    testBtn.disabled = false;
                     break;
                 case 'bonus':
                     handleBonusSquare();
                     break;
-                case 'challenge':
-                    // Challenge squares trigger a question with double points
-                    setTimeout(() => {
-                        gameStats.doublePoints = true;
-                        triggerBoardQuestion();
-                    }, 1000);
-                    break;
                 case 'finish':
                     handleFinishSquare();
-                    break;
-                case 'start':
-                    showMessage('🏁 Casa inicial! Gire a roleta para começar sua jornada!', 'info');
                     break;
             }
         }
 
         function handleSquareClick(index) {
-            // Only allow clicking current square for questions - NO backward movement
+            // Apenas permite a interação na casa atual
             if (index === boardState.currentPosition) {
                 const square = boardState.boardSquares[index];
                 if (square.type === 'question' || square.type === 'challenge') {
@@ -2704,20 +2900,19 @@
                     handleSquareLanding(square);
                 }
             } else if (index < boardState.currentPosition) {
-                // Prevent clicking on previous squares
                 showMessage('⚠️ Você não pode voltar para casas anteriores!', 'warning');
             } else {
-                // Prevent clicking on future squares
-                showMessage('⚠️ Use a roleta para avançar no tabuleiro!', 'info');
+                showMessage('⚠️ Use o botão "Avançar 1 Casa" para mover no tabuleiro!', 'info');
             }
         }
 
         function triggerBoardQuestion() {
-            // Force trigger a question using the same system as character mode
+            // Desabilita o botão de teste de pergunta após o clique
+            document.getElementById('test-question-btn').disabled = true;
+            
             const currentPhaseData = phases[gameStats.currentPhase];
             const availableQuestions = scenarios.slice(currentPhaseData.startIndex, currentPhaseData.endIndex);
             
-            // Filter out used questions for this phase
             const unusedQuestions = availableQuestions.filter((_, index) => 
                 !usedQuestions.includes(currentPhaseData.startIndex + index)
             );
@@ -2740,15 +2935,16 @@
             gameStats.knowledge += bonusPoints;
             gameStats.joyCoins += 3;
             
+            // Play coin sound
+            playSound('sfxCoin');
+            
             createJoyCoin();
             showMessage(`💎 Casa Bônus! +${bonusPoints} Conhecimento e +3 Moedas da Alegria!`, 'success');
             updateDisplay();
         }
 
         function handleChallengeSquare() {
-            // Challenge squares give double points but are harder questions
             showMessage('⚡ Casa Desafio! Próxima pergunta vale pontos duplos!', 'warning');
-            // Set a flag for double points on next question
             gameStats.doublePoints = true;
         }
 
@@ -2758,7 +2954,7 @@
         }
 
         function showBoardHelp() {
-            showMessage('🎲 Gire a roleta para mover pelo tabuleiro! 💎 Casas bônus dão pontos extras. ⚡ Casas desafio dobram os pontos da próxima pergunta. ❓ Casas de pergunta testam seu conhecimento!', 'info');
+            showMessage('🎯 Avance casa por casa. Clique em "Testar Pergunta" nas casas ❓ ou ⚡. 💎 Casas bônus dão pontos extras. ⚡ Casas desafio dobram os pontos da próxima pergunta.', 'info');
         }
 
         function showMessage(text, type = 'success') {
@@ -2775,7 +2971,6 @@
             const jobElement = event.currentTarget;
             const originalContent = jobElement.innerHTML;
             
-            // Show loading state
             jobElement.innerHTML = `
                 <div class="job-icon">⏳</div>
                 <div class="job-info">
@@ -2789,7 +2984,7 @@
                 gameStats.knowledge += points;
                 if (gameStats.knowledge >= 100) {
                     gameStats.medals++;
-                    gameStats.knowledge = 50; // Reset knowledge after earning medal
+                    gameStats.knowledge = 50; 
                     showMessage(`🏅 Parabéns! Você ganhou uma medalha! Total: ${gameStats.medals}`, 'success');
                 } else {
                     showMessage(`${icon} +${points} Conhecimento!`, 'success');
@@ -2802,13 +2997,11 @@
         }
 
         function triggerRandomScenario() {
-            // Prevent double-tap zoom on mobile
             event.preventDefault();
             
             const currentPhaseData = phases[gameStats.currentPhase];
             const availableQuestions = scenarios.slice(currentPhaseData.startIndex, currentPhaseData.endIndex);
             
-            // Filter out used questions for this phase
             const unusedQuestions = availableQuestions.filter((_, index) => 
                 !usedQuestions.includes(currentPhaseData.startIndex + index)
             );
@@ -2831,7 +3024,6 @@
             const scenarioText = document.getElementById('modal-scenario-text');
             const optionsContainer = document.getElementById('modal-options-container');
             
-            // Update character image based on question type
             updateCharacterForQuestion(scenario);
             
             scenarioText.textContent = scenario.text;
@@ -2852,45 +3044,38 @@
             const character = document.getElementById('boy-character');
             let imageFile = '';
 
-            // Usa o tipo de personagem definido no cenário, se existir
-            if (scenario.character_type === 'boy') {
+            const type = scenario.character_type || 'girl';
+            if (type === 'boy') {
                 imageFile = characterImages.boy_q;
-            } else if (scenario.character_type === 'girl') {
-                imageFile = characterImages.girl_q;
             } else {
-                // Caso não tenha character_type, usa um default
-                imageFile = characterImages.girl_q; 
+                imageFile = characterImages.girl_q;
             }
 
             character.style.background = `url(${imageFile}) center/cover no-repeat`;
             character.classList.add('has-image');
-            character.innerHTML = ''; // Limpa o conteúdo emoji
+            character.innerHTML = ''; 
         }
 
         function updateCharacterForAnswer(scenario, isCorrect) {
             const character = document.getElementById('boy-character');
             let imageFile = '';
             
-            const type = scenario.character_type || 'girl'; // Default para 'girl' se não especificado
+            const type = scenario.character_type || 'girl';
             
             if (isCorrect) {
-                // Show success character
                 imageFile = type === 'boy' ? characterImages.boy_a : characterImages.girl_a;
             } else {
-                // Show error character
                 imageFile = type === 'boy' ? characterImages.boy_e : characterImages.girl_e;
             }
             
             character.style.background = `url(${imageFile}) center/cover no-repeat`;
             character.classList.add('has-image');
-            character.innerHTML = ''; // Limpa o conteúdo emoji
+            character.innerHTML = ''; 
             
-            // Return to default image after a delay
             setTimeout(() => {
                 if (phases[gameStats.currentPhase].type === 'character') {
                     character.style.background = `url(${characterImages.girl_d}) center/cover no-repeat`;
                 } else {
-                    // Se estiver no modo tabuleiro, a imagem do personagem não é exibida
                     character.style.background = 'transparent'; 
                     character.classList.remove('has-image');
                 }
@@ -2901,44 +3086,38 @@
             const isCorrect = option.points > 0;
             let finalPoints = option.points;
             
-            // Apply double points if on challenge square
             if (gameStats.doublePoints && isCorrect) {
                 finalPoints *= 2;
-                gameStats.doublePoints = false; // Reset flag
+                gameStats.doublePoints = false; 
                 showMessage('⚡ Pontos duplos aplicados!', 'success');
             }
             
-            // Update character appearance based on answer
             updateCharacterForAnswer(scenario, isCorrect);
             
             gameStats.knowledge += finalPoints;
             if (gameStats.knowledge < 0) gameStats.knowledge = 0;
             
-            // Award joy coins for correct answers or bombs for wrong answers
             if (finalPoints > 0) {
                 const coinsEarned = Math.floor(finalPoints / 10) + 1;
                 gameStats.joyCoins += coinsEarned;
                 createJoyCoin();
-                playAudio(sfxCoin, 0.7); // Toca SFX de moeda
+                playSound('sfxCoin');
                 showMessage(`🪙 +${coinsEarned} Moedas da Alegria! ${option.feedback}`, 'success');
             } else {
                 gameStats.bombs++;
                 createBombExplosion();
-                playAudio(sfxError, 0.9); // Toca SFX de erro
+                playSound('sfxError');
                 showMessage(`💣 BOOM! Bomba coletada! ${option.feedback}`, 'warning');
             }
             
-            // Update phase progress
             gameStats.phaseProgress++;
             
-            // Update board info if in board mode
             const currentPhaseData = phases[gameStats.currentPhase];
             if (currentPhaseData.type === 'board') {
-                document.getElementById('board-questions').textContent = `Perguntas: ${gameStats.phaseProgress}/${gameStats.questionsPerPhase}`;
+                document.getElementById('board-questions').textContent = `❓ Perguntas: ${gameStats.phaseProgress}/${gameStats.questionsPerPhase}`;
             }
             
-            // Check if phase is complete
-            if (gameStats.phaseProgress >= gameStats.questionsPerPhase) {
+            if (gameStats.phaseProgress >= gameStats.questionsPerPhase && currentPhaseData.type === 'character') {
                 completePhase();
             } else {
                 if (gameStats.knowledge >= 100) {
@@ -2951,20 +3130,23 @@
             updateDisplay();
             updatePhaseDisplay();
             closeModal();
+            
+            // Re-enable Advance/Test button after question is answered and mode is board
+            if (currentPhaseData.type === 'board') {
+                document.getElementById('test-question-btn').disabled = false;
+                document.getElementById('advance-btn').disabled = false;
+            }
         }
 
         function completePhase() {
+            playSound('sfxWin');
+            
             const currentPhaseData = phases[gameStats.currentPhase];
             gameStats.completedPhases.push(gameStats.currentPhase);
             
-            // Mark reward as completed
             const rewardElement = document.getElementById(`reward-${gameStats.currentPhase}`);
             rewardElement.classList.add('completed');
             
-            // Toca o SFX de vitória ao completar a fase
-            playAudio(sfxWin, 1.0);
-            
-            // Show phase completion modal
             showPhaseCompleteModal(currentPhaseData);
         }
 
@@ -2978,7 +3160,6 @@
             
             modal.style.display = 'flex';
             
-            // Create confetti
             createConfetti();
         }
 
@@ -2987,29 +3168,25 @@
             modal.style.display = 'none';
             
             if (gameStats.currentPhase < 4) {
-                // Move to next phase
                 gameStats.currentPhase++;
                 gameStats.phaseProgress = 0;
                 updatePhaseDisplay();
                 showMessage(`🚀 Bem-vindo à ${phases[gameStats.currentPhase].name}!`, 'success');
             } else {
-                // All phases completed - MEGA CELEBRATION!
                 showFinalCelebration();
             }
         }
 
         function showFinalCelebration() {
-            // Create massive confetti shower
             for (let i = 0; i < 100; i++) {
                 setTimeout(() => createConfetti(), i * 50);
             }
             
             showMessage('🎯🏆 PARABÉNS! Você é oficialmente um ESPECIALISTA EM SEXUALIDADE! Todas as 4 fases concluídas com sucesso! 🏆🎯', 'success');
             
-            // Toca o SFX de vitória final
-            playAudio(sfxWin, 1.0);
+            // Play victory sound
+            playSound('sfxWin');
             
-            // Update character to celebration mode
             const character = document.getElementById('boy-character');
             character.textContent = '🏆';
             character.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
@@ -3049,9 +3226,8 @@
             
             document.body.appendChild(bomb);
             
-            // Screen shake effect
             const gameContainer = document.querySelector('.game-container');
-            gameContainer.style.animation = 'shake 0.5s ease-in-out';
+            gameContainer.style.animation = 'smoothPulse 0.8s ease-in-out';
             
             setTimeout(() => {
                 bomb.remove();
@@ -3081,104 +3257,17 @@
                 }, 5000);
             }
         }
-
-        function skipToNextPhase() {
-            if (gameStats.currentPhase < 4) {
-                gameStats.currentPhase++;
-                gameStats.phaseProgress = 0;
-                updatePhaseDisplay();
-                showMessage(`⏭️ Pulando para ${phases[gameStats.currentPhase].name}`, 'info');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('question-modal').style.display = 'none';
-        }
-
-        function resetRoom() {
-            gameStats = {
-                knowledge: 50,
-                medals: 0,
-                currentPhase: 1,
-                questionsAnswered: 0,
-                questionsPerPhase: 14,
-                phaseProgress: 0,
-                completedPhases: [],
-                joyCoins: 0,
-                bombs: 0,
-                doublePoints: false
-            };
-            
-            // Reset board state completely
-            boardState = {
-                currentPosition: 0,
-                totalMoves: 0,
-                boardSquares: [],
-                isRolling: false,
-                questionsAnswered: 0
-            };
-            
-            usedQuestions = [];
-            
-            // Reset reward displays
-            for (let i = 1; i <= 4; i++) {
-                const rewardElement = document.getElementById(`reward-${i}`);
-                rewardElement.classList.remove('completed');
-            }
-            
-            // Reset character
-            const character = document.getElementById('boy-character');
-            character.innerHTML = '';
-            character.style.background = phases[1].color;
-            character.style.backgroundImage = '';
-            character.classList.remove('has-image');
-            
-            // Clear board completely
-            const boardPath = document.getElementById('board-path');
-            if (boardPath) {
-                boardPath.innerHTML = '';
-            }
-            
-            // Hide roulette if visible
-            const rouletteContainer = document.getElementById('roulette-container');
-            if (rouletteContainer) {
-                rouletteContainer.style.display = 'none';
-            }
-            
-            // Reset roll button
-            const rollButton = document.getElementById('roll-dice-btn');
-            if (rollButton) {
-                rollButton.disabled = false;
-                rollButton.textContent = '🎲 Girar Roleta';
-            }
-            
-            updateDisplay();
-            updatePhaseDisplay();
-            showMessage('🔄 Jornada reiniciada! Tabuleiro e progresso foram resetados!', 'info');
-        }
-
-        function toggleMute() {
-            isMuted = !isMuted;
-            const muteButton = document.getElementById('mute-button');
-            muteButton.textContent = isMuted ? '🔇' : '🔊';
-            showMessage(isMuted ? '🔇 Som desligado' : '🔊 Som ligado', 'info');
-            
-            const videoEl = document.getElementById('intro-video');
-            if (videoEl) {
-                videoEl.muted = isMuted;
-            }
-            
-            // Controla o BGM
-            bgm.muted = isMuted;
-            
-            // Controla os SFX (eles usam a flag isMuted na função playAudio)
-        }
-
+        
         // Initialize the game when page loads
         document.addEventListener('DOMContentLoaded', initGame);
         
-        // Add touch event support for mobile devices
+        // Enhanced touch support for mobile devices
         document.addEventListener('touchstart', function() {}, {passive: true});
+        document.addEventListener('touchmove', function(e) {
+            if (!e.target.closest('.sidebar')) {
+                e.preventDefault();
+            }
+        }, {passive: false});
         
         // Prevent zoom on double tap for iOS
         let lastTouchEnd = 0;
@@ -3189,6 +3278,44 @@
             }
             lastTouchEnd = now;
         }, false);
+        
+        // Handle orientation changes
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                const gameBoard = document.getElementById('game-board');
+                if (gameBoard.classList.contains('active')) {
+                    generateBoardPath();
+                    updatePlayerPosition();
+                }
+                
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }, 100);
+        });
+        
+        // Set initial viewport height
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
+        // Handle resize events
+        window.addEventListener('resize', function() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+            
+            const gameBoard = document.getElementById('game-board');
+            if (gameBoard.classList.contains('active')) {
+                setTimeout(() => {
+                    generateBoardPath();
+                    updatePlayerPosition();
+                }, 100);
+            }
+        });
+        
+        // Handle app-like behavior on mobile
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            window.deferredPrompt = e;
+        });
 
         // Close modal when clicking outside
         document.getElementById('question-modal').addEventListener('click', function(e) {
@@ -3203,5 +3330,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d229a818ef1f2',t:'MTc2MTAxMTc1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991e1b5c2717f1f2',t:'MTc2MTAyMTk0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
