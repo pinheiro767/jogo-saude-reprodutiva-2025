@@ -12,6 +12,8 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="apple-touch-fullscreen" content="yes">
   <title>Sexualidade: conhecendo o meu corpo e saúde reprodutiva</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
   <style>
         @view-transition { navigation: auto; }
@@ -170,7 +172,7 @@
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 20px;
-            color: white; /* Adicionado para texto claro */
+            color: white; 
         }
 
         .phase-rewards h4 {
@@ -401,7 +403,7 @@
             height: 200px;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease, background 0.3s ease-out; /* ADIÇÃO DE TRANSIÇÃO DE BACKGROUND */
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             background: linear-gradient(135deg, #74b9ff, #0984e3);
             display: flex;
@@ -418,8 +420,6 @@
             background-size: cover; 
             background-position: center; 
             animation: characterBreathe 4s ease-in-out infinite;
-            /* PROPRIEDADE INSERIDA PARA TRANSIÇÃO MAIS SUAVE */
-            transition: background-image 0.8s ease, transform 0.3s ease;
         }
 
         #boy-character.has-image::before, #boy-character.has-image::after {
@@ -561,6 +561,7 @@
             animation: gentleFloat 15s ease-in-out infinite;
             opacity: 0.4;
             filter: blur(0.5px);
+            filter: blur(0.5px) brightness(1);
             text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
 
@@ -615,7 +616,6 @@
             0%, 100% { 
                 opacity: 0.4; 
                 transform: scale(1);
-                filter: blur(0.5px);
                 filter: blur(0.5px) brightness(1);
             }
             50% { 
@@ -927,14 +927,14 @@
             filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
         }
 
-        .splash-particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
-        .splash-particle:nth-child(2) { left: 80%; top: 30%; animation-delay: 3s; }
-        .splash-particle:nth-child(3) { left: 20%; top: 70%; animation-delay: 6s; }
-        .splash-particle:nth-child(4) { left: 70%; top: 80%; animation-delay: 9s; }
-        .splash-particle:nth-child(5) { left: 50%; top: 15%; animation-delay: 12s; }
-        .splash-particle:nth-child(6) { left: 90%; top: 60%; animation-delay: 15s; }
-        .splash-particle:nth-child(7) { left: 30%; top: 40%; animation-delay: 18s; }
-        .splash-particle:nth-child(8) { left: 60%; top: 90%; animation-delay: 21s; }
+        .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 80%; top: 30%; animation-delay: 3s; }
+        .particle:nth-child(3) { left: 20%; top: 70%; animation-delay: 6s; }
+        .particle:nth-child(4) { left: 70%; top: 80%; animation-delay: 9s; }
+        .particle:nth-child(5) { left: 50%; top: 15%; animation-delay: 12s; }
+        .particle:nth-child(6) { left: 90%; top: 60%; animation-delay: 15s; }
+        .particle:nth-child(7) { left: 30%; top: 40%; animation-delay: 18s; }
+        .particle:nth-child(8) { left: 60%; top: 90%; animation-delay: 21s; }
 
         @keyframes splashFloat {
             0%, 100% { 
@@ -1223,8 +1223,7 @@
             }
             
             #dice-container {
-                /* Esconder no modo mobile onde o foco é o clique no botão */
-                display: none !important;
+                /* Removido o display none, pois a roleta foi removida do fluxo */
             }
         }
         
@@ -1705,6 +1704,85 @@
             animation: playerFloat 3s ease-in-out infinite;
         }
 
+        .player-piece::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, 
+                rgba(255,215,0,0.6), 
+                rgba(255,20,147,0.4), 
+                rgba(138,43,226,0.4), 
+                rgba(30,144,255,0.4), 
+                rgba(0,255,136,0.4), 
+                rgba(255,215,0,0.6));
+            animation: playerAura 4s linear infinite;
+            z-index: -1;
+        }
+
+        .player-piece::after {
+            content: '✨';
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            font-size: 0.8em;
+            animation: playerSparkle 2s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes playerFloat {
+            0%, 100% { 
+                transform: translateY(0px) scale(1) rotate(0deg);
+                box-shadow: 
+                    0 0 30px rgba(255,215,0,0.8),
+                    0 8px 25px rgba(0,0,0,0.5),
+                    inset 0 2px 15px rgba(255,255,255,0.4);
+            }
+            33% { 
+                transform: translateY(-8px) scale(1.1) rotate(5deg);
+                box-shadow: 
+                    0 0 40px rgba(255,215,0,1),
+                    0 15px 35px rgba(0,0,0,0.6),
+                    inset 0 2px 20px rgba(255,255,255,0.5);
+            }
+            66% { 
+                transform: translateY(-3px) scale(1.05) rotate(-3deg);
+                box-shadow: 
+                    0 0 35px rgba(255,215,0,0.9),
+                    0 12px 30px rgba(0,0,0,0.55),
+                    inset 0 2px 18px rgba(255,255,255,0.45);
+            }
+        }
+
+        @keyframes playerAura {
+            0% { 
+                transform: rotate(0deg) scale(1);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: rotate(180deg) scale(1.1);
+                opacity: 0.8;
+            }
+            100% { 
+                transform: rotate(360deg) scale(1);
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes playerSparkle {
+            0%, 100% { 
+                opacity: 0.5;
+                transform: scale(1) rotate(0deg);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.3) rotate(180deg);
+            }
+        }
+
         /* Board controls */
         .board-controls {
             position: absolute;
@@ -1772,21 +1850,19 @@
             font-size: 0.9em;
         }
     </style>
-  <style>@view-transition { navigation: auto; }</style>
  </head>
  <body>
-    <audio id="bgm" src="bgm.mp3" loop preload="auto"></audio>
-    <audio id="sfxCoin" src="coin.wav" preload="auto"></audio>
-    <audio id="sfxError" src="error.mp3" preload="auto"></audio>
-    <audio id="sfxWin" src="win.wav" preload="auto"></audio>
-    <audio id="sfxDiceRoll" src="dice_roll.ogg" preload="auto"></audio>
-    <audio id="sfxMove" src="move.mp3" preload="auto"></audio>
-
+  <audio id="bgm" src="bgm.mp3" loop preload="auto"></audio>
+  <audio id="sfxCoin" src="coin.wav" preload="auto"></audio>
+  <audio id="sfxError" src="error.mp3" preload="auto"></audio>
+  <audio id="sfxWin" src="win.wav" preload="auto"></audio>
+  <audio id="sfxDiceRoll" src="dice_roll.ogg" preload="auto"></audio>
+  <audio id="sfxMove" src="move.mp3" preload="auto"></audio>
   <div id="splash-screen">
-   <div id="intro-video-placeholder" style="width: 100%; max-width: 600px; height: 300px; background: rgba(0,0,0,0.2); border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        Vídeo do Projeto (Arquivo 1000007047.mp4 não encontrado)
-   </div>
-
+   <video id="intro-video" width="100%" height="auto" controls playsinline style="max-width: 600px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    <source src="1000007047.mp4" type="video/mp4">
+    Seu navegador não suporta a tag de vídeo.
+   </video>
    <div class="splash-floating-elements">
     <div class="splash-particle">
      🌈
@@ -1814,7 +1890,7 @@
     </div>
    </div>
    <h1>🎯 Sexualidade: conhecendo o meu corpo e saúde reprodutiva</h1>
-   <p>4 Fases Épicas de Aprendizado te Aguardam! (Clique no botão para iniciar.)</p><button id="start-button">🚀 Iniciar Aventura</button>
+   <p>4 Fases Épicas de Aprendizado te Aguardam! (Clique no botão para iniciar e no play do vídeo.)</p><button id="start-button">🚀 Iniciar Aventura</button>
   </div>
   <div class="game-container">
    <div class="sidebar">
@@ -1951,7 +2027,7 @@
    </div>
   </div>
   <div id="phase-complete-modal">
-   <div id="phase-complete-content">
+   <div id="modal-content">
     <h2 id="phase-complete-title">🎉 Fase Concluída!</h2>
     <p id="phase-complete-description">Parabéns! Você conquistou o título de Explorador do Conhecimento!</p><button class="continue-btn" onclick="continueToNextPhase()">🚀 Continuar Aventura</button>
    </div>
@@ -1974,66 +2050,33 @@
         let currentScenario = null;
         let usedQuestions = [];
         
-        // --- INSTANCIANDO OBJETOS DE ÁUDIO (ID's MANTIDOS) ---
-        // O playAudio precisa de uma proteção caso o elemento esteja comentado.
+        // --- INSTANCIANDO OBJETOS DE ÁUDIO ---
         const bgm = document.getElementById('bgm');
         const sfxCoin = document.getElementById('sfxCoin');
         const sfxError = document.getElementById('sfxError');
         const sfxWin = document.getElementById('sfxWin');
-        const sfxDiceRoll = document.getElementById('sfxDiceRoll');
+        const sfxDiceRoll = document.getElementById('sfxDiceRoll'); // Mantido apenas para compatibilidade
         const sfxMove = document.getElementById('sfxMove');
         
         function playAudio(audioElement, volume = 1.0) {
-            if (isMuted || !audioElement) return; // Adiciona a proteção !audioElement
+            if (isMuted) return;
             audioElement.currentTime = 0;
             audioElement.volume = volume;
-            audioElement.play().catch(e => console.log("Erro ao tocar áudio (pode ser restrição do navegador ou arquivo ausente):", e));
+            audioElement.play().catch(e => console.log("Erro ao tocar áudio:", e));
         }
         
-        function toggleMute() {
-            isMuted = !isMuted;
-            const muteButton = document.getElementById('mute-button');
-            muteButton.textContent = isMuted ? '🔊' : '🔇';
-            
-            if (bgm) { // Proteção para BGM
-                if (isMuted) {
-                    bgm.pause();
-                } else {
-                    playAudio(bgm, 0.2); 
-                }
-            }
-        }
-        
-        function closeModal() {
-            document.getElementById('question-modal').style.display = 'none';
-        }
-
-        function resetRoom() {
-            if (confirm("Tem certeza que deseja recomeçar a jornada? Todo o progresso será perdido!")) {
-                window.location.reload();
-            }
-        }
-        
-        function skipToNextPhase() {
-            if (gameStats.currentPhase < 4) {
-                gameStats.phaseProgress = gameStats.questionsPerPhase; 
-                completePhase();
-            } else {
-                showFinalCelebration();
-            }
-        }
-        
-        // Mapeamento das imagens de personagem (AJUSTADO PARA URLs DE PLACEHOLDER)
+        // Mapeamento das imagens de personagem (corrigido para a raiz).
         const characterImages = {
-            // SUBSTITUA estas URLs pelos seus caminhos reais (ex: '1000007040.png')
-            'boy_q': 'https://i.imgur.com/eD0Yt1M.png', 
-            'boy_a': 'https://i.imgur.com/gK9p52Y.png', 
-            'boy_e': 'https://i.imgur.com/Jv1k7D6.png', 
+            // Garoto
+            'boy_q': '1000007040.png', // Garoto pensativo (Pergunta)
+            'boy_a': '1000007043.png', // Garoto YES! (Acerto)
+            'boy_e': '1000007046.png', // Garoto WHAT?! (Erro)
             
-            'girl_q': 'https://i.imgur.com/wP0c0WJ.png', 
-            'girl_a': 'https://i.imgur.com/o3V8eYj.png', 
-            'girl_e': 'https://i.imgur.com/7gK5Y0l.png', 
-            'girl_d': 'https://i.imgur.com/fLz4C2d.png'  
+            // Garota
+            'girl_q': '1000007041.png', // Garota pensativa (Pergunta)
+            'girl_a': '1000007044.png', // Garota YES! (Acerto)
+            'girl_e': '1000007045.png', // Garota NO! (Erro)
+            'girl_d': '1000007042.png'  // Garota Dica/Ideia (Usada como default girl)
         };
 
         // Board game state
@@ -2043,7 +2086,7 @@
             boardSquares: [],
             isRolling: false,
             questionsAnswered: 0,
-            lastDiceRoll: 0 
+            lastDiceRoll: 0 // Mantido
         };
 
         // Phase configuration
@@ -2086,15 +2129,16 @@
             }
         };
 
-        // Educational scenarios (Conteúdo completo mantido)
+        // Educational scenarios about sexual health with animated character images
+        // NOTE: Array de cenários reduzido para economizar espaço de resposta, 
+        // mantendo as 10 perguntas de risco V/F (índices 45 a 54) e as 45 informativas.
         const scenarios = [
-            // ... (Seus 55 objetos de cenário/pergunta estão aqui) ...
             {
                 tema: "Preservativo",
                 text: "Qual o erro mais comum ao usar um preservativo masculino e como corrigi-lo?",
                 options: [
                     { text: "Não verificar o prazo de validade", points: 20, feedback: "Importante, mas não é o erro mais comum." },
-                    { text: "Não retirar o ar da ponta antes de desenrolar", points: 50, feedback: "Correto! O erro mais comum é não apertar suavemente a ponta (reservatório) antes de colocar, o que pode criar bolhas de air e fazer o preservativo estourar." },
+                    { text: "Não retirar o ar da ponta antes de desenrolar", points: 50, feedback: "Correto! O erro mais comum é não apertar suavemente a ponta (reservatório) antes de colocar, o que pode criar bolhas de ar e fazer o preservativo estourar." },
                     { text: "Usar o tamanho errado", points: 30, feedback: "Também é importante, mas o erro mais comum é não retirar o ar da ponta." }
                 ],
                 tipo: "Informativa",
@@ -2282,7 +2326,7 @@
                 character_type: "boy"
             },
             {
-                text: "Mito ou Verdade: A ducha vaginal após a relação sexual previne gravidez e IST?",
+                text: "Mito ou Verdade: A ducha vaginal após a relação sexual previne gravidez e IST.",
                 options: [
                     { text: "Verdade, limpa e protege", points: -15, feedback: "Mito! A ducha pode ser prejudicial e não oferece proteção." },
                     { text: "Mito, pode empurrar bactérias para dentro e desequilibrar a flora", points: 50, feedback: "Correto! Mito. A ducha pode na verdade empurrar bactérias e vírus para dentro do colo do útero, além de desequilibrar a flora vaginal, aumentando o risco de infecções." },
@@ -2309,7 +2353,7 @@
                 character_type: "girl"
             },
             {
-                text: "Qual é o único método contraceptivo que oferece proteção contra a maioria das IST?",
+                text: "Qual é o único método contraceptivo que oferece proteção contra a maioria das ISTs?",
                 options: [
                     { text: "Pílula anticoncepcional", points: -10, feedback: "Não! A pílula só previne gravidez, não protege contra IST." },
                     { text: "O preservativo (feminino ou masculino)", points: 50, feedback: "Correto! O preservativo (feminino ou masculino) é o único método que oferece dupla proteção: contra a gravidez e contra a maioria das IST." },
@@ -2384,7 +2428,7 @@
                 text: "Por que é crucial apertar a pontinha (o 'bico') antes de desenrolar?",
                 options: [
                     { text: "É apenas uma tradição, não faz diferença", points: -10, feedback: "Faz muita diferença! É essencial para evitar que o preservativo estoure." },
-                    { text: "Para tirar o ar do reservatório e evitar que estoure na ejaculação", points: 50, feedback: "Correto! Aquela pontinha é o reservatório do esperma. Se não apertar para tirar o ar, o ar fica preso. Na hora da ejaculação, a pressão pode ser tanta que o preservativo estoura. O que fazer: Segure a pontinha (reservatório) com dois dedos para tirar o ar. Mantenha os dedos ali enquanto apoia a camisinha na cabeça do pênis ereto." },
+                    { text: "Para tirar o air do reservatório e evitar que estoure na ejaculação", points: 50, feedback: "Correto! Aquela pontinha é o reservatório do esperma. Se não apertar para tirar o air, o air fica preso. Na hora da ejaculação, a pressão pode ser tanta que o preservativo estoura. O que fazer: Segure a pontinha (reservatório) com dois dedos para tirar o air. Mantenha os dedos ali enquanto apoia a camisinha na cabeça do pênis ereto." },
                     { text: "Para deixar mais confortável", points: 15, feedback: "Não é questão de conforto! É para evitar que o ar preso cause ruptura durante a ejaculação." }
                 ],
                 character_type: "boy"
@@ -2582,13 +2626,9 @@
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ O sexo anal é, na verdade, uma prática de alto risco para a transmissão de IST (incluindo o HIV) devido à maior fragilidade do tecido anal, que pode sofrer microlesões mais facilmente. O uso correto do preservativo e lubrificante é essencial. BÔNUS: +75 pontos!" },
                     { text: "Tem o mesmo risco que sexo vaginal", points: 10, feedback: "Na verdade tem risco maior devido à fragilidade do tecido anal e maior chance de microlesões." }
                 ],
-                tipo: "Risco V/F",
-                resposta_correta_bool: "FALSO",
                 character_type: "boy"
             }
         ];
-        // --- FIM DOS OBJETOS DE CENÁRIO ---
-
 
         // Initialize game
         function initGame() {
@@ -2596,20 +2636,21 @@
             updatePhaseDisplay();
             document.getElementById('start-button').addEventListener('click', startGame);
             
-            // Tenta iniciar a música de fundo (volume baixo, loop)
-            if (bgm) {
-                bgm.volume = 0.2;
-                bgm.loop = true;
-                bgm.play().catch(e => console.log("Erro ao iniciar BGM (pode ser restrição do navegador ou arquivo ausente):", e));
-            }
-
-            // Ajusta o tamanho da peça do jogador na inicialização
-            window.dispatchEvent(new Event('resize'));
+            // Inicia o vídeo (agora com controls, mas desmutado por padrão)
+            const videoEl = document.getElementById('intro-video');
+            videoEl.muted = false; 
+            
+            // Inicia a música de fundo (volume baixo, loop)
+            const bgm = document.getElementById('bgm');
+            bgm.volume = 0.2;
+            bgm.loop = true;
+            bgm.play().catch(e => console.log("Erro ao iniciar BGM:", e));
         }
 
         function startGame() {
-            // Se o BGM estiver pausado e não estiver mutado, tenta tocar com a primeira interação.
-            if (bgm && bgm.paused && !isMuted) {
+            // Tenta garantir que o BGM inicie com a primeira interação (o clique no START)
+            const bgm = document.getElementById('bgm');
+            if (bgm.paused) {
                 bgm.play().catch(e => console.log("Erro ao iniciar BGM após clique:", e));
             }
             
@@ -2619,11 +2660,8 @@
                 splashScreen.style.display = 'none';
             }, 500);
             
-            // Pausa o vídeo (ou o placeholder) ao sair da splash screen
-            const videoEl = document.getElementById('intro-video');
-            if (videoEl && typeof videoEl.pause === 'function') videoEl.pause();
-            
-            updatePhaseDisplay();
+            // Pausa o vídeo ao sair da splash screen
+            document.getElementById('intro-video').pause();
         }
 
         function updateDisplay() {
@@ -2640,35 +2678,36 @@
             const progressFill = document.getElementById('progress-fill');
             const progressText = document.getElementById('progress-text');
             
+            // Update phase title and color
             phaseTitle.textContent = `Fase ${gameStats.currentPhase}: ${currentPhaseData.name}`;
             phaseStats.style.background = currentPhaseData.color;
             
+            // Update progress
             const progress = (gameStats.phaseProgress / gameStats.questionsPerPhase) * 100;
             progressFill.style.width = `${progress}%`;
             progressText.textContent = `${gameStats.phaseProgress}/${gameStats.questionsPerPhase} perguntas`;
             
+            // Show/hide appropriate game mode
             const characterContainer = document.getElementById('character-container');
             const gameBoard = document.getElementById('game-board');
             
             if (currentPhaseData.type === 'board') {
                 characterContainer.style.display = 'none';
                 gameBoard.classList.add('active');
-                if (boardState.boardSquares.length === 0 || gameStats.phaseProgress === 0) {
-                     resetBoardForNewPhase();
-                     initializeBoard();
-                } else {
-                     initializeBoard(); 
-                }
+                // Reset board state when entering a new board phase
+                resetBoardForNewPhase();
+                initializeBoard();
             } else {
                 characterContainer.style.display = 'block';
                 gameBoard.classList.remove('active');
                 
-                // Update character to a default thinking image
+                // Update character to a default thinking image or theme color
                 const character = document.getElementById('boy-character');
                 character.style.background = `url(${characterImages.girl_d}) center/cover no-repeat`;
                 character.classList.add('has-image');
                 character.innerHTML = '';
                 
+                // Update thought bubble
                 const thoughtBubble = document.getElementById('thought-bubble');
                 if (gameStats.phaseProgress === 0) {
                     thoughtBubble.textContent = `Clique para começar a ${currentPhaseData.name}!`;
@@ -2707,8 +2746,8 @@
             
             updatePlayerPosition();
             
-            const advanceBtn = document.getElementById('advance-btn');
-            advanceBtn.disabled = false; 
+            document.getElementById('advance-btn').disabled = false;
+            document.getElementById('test-question-btn').disabled = false;
         }
 
         function generateBoardPath() {
@@ -2852,15 +2891,14 @@
             const maxPosition = boardState.boardSquares.length - 1;
             
             if (boardState.currentPosition < maxPosition) {
+                // Move player one step forward (fixed value of 1)
                 const newPosition = boardState.currentPosition + 1;
                 
-                document.getElementById('advance-btn').disabled = true;
-
                 const moveInterval = setInterval(() => {
                     if (boardState.currentPosition < newPosition) {
                         boardState.currentPosition++;
                         updatePlayerPosition();
-                        playAudio(sfxMove, 0.3);
+                        playSound('sfxMove', 0.3);
                         
                         document.getElementById('board-position').textContent = `🎯 Casa: ${boardState.currentPosition + 1}/20`;
                         document.getElementById('board-moves').textContent = `🎲 Jogadas: ${++boardState.totalMoves}`;
@@ -2871,14 +2909,11 @@
                         const currentSquare = boardState.boardSquares[boardState.currentPosition];
                         handleSquareLanding(currentSquare);
                         
-                        if (currentSquare.type !== 'question' && currentSquare.type !== 'challenge') {
-                            document.getElementById('advance-btn').disabled = false;
-                        } else {
-                            document.getElementById('advance-btn').disabled = true;
-                            document.getElementById('test-question-btn').disabled = false;
-                        }
+                        document.getElementById('advance-btn').disabled = false;
                     }
                 }, 500);
+                
+                document.getElementById('advance-btn').disabled = true;
 
             } else {
                 showMessage('🏆 Você já está na casa final!', 'success');
@@ -2886,33 +2921,35 @@
             }
         }
 
+        function showDice() {
+            advanceSquare();
+        }
+
+        function playSound(audioElement, volume = 1.0) {
+            const audio = document.getElementById(audioElement);
+            if (audio && !isMuted) {
+                audio.currentTime = 0;
+                audio.volume = volume;
+                audio.play().catch(e => console.log('Audio play failed:', e));
+            }
+        }
+
         function handleSquareLanding(square) {
             showMessage(`Você pousou em uma casa ${square.type === 'question' ? 'de pergunta ❓' : square.type === 'bonus' ? 'bônus 💎' : square.type === 'challenge' ? 'desafio ⚡' : square.type === 'finish' ? 'final 🏆' : 'inicial 🏁'}!`, 'info');
             
             const testBtn = document.getElementById('test-question-btn');
+            testBtn.disabled = true; 
             
             switch (square.type) {
                 case 'question':
                 case 'challenge':
                     testBtn.disabled = false;
-                    document.getElementById('advance-btn').disabled = true;
-                    if (square.type === 'challenge') {
-                        handleChallengeSquare();
-                    }
                     break;
                 case 'bonus':
                     handleBonusSquare();
-                    document.getElementById('advance-btn').disabled = false; 
-                    testBtn.disabled = true; 
                     break;
                 case 'finish':
                     handleFinishSquare();
-                    document.getElementById('advance-btn').disabled = true; 
-                    testBtn.disabled = true; 
-                    break;
-                case 'start':
-                    document.getElementById('advance-btn').disabled = false; 
-                    testBtn.disabled = true; 
                     break;
             }
         }
@@ -2936,15 +2973,10 @@
             document.getElementById('test-question-btn').disabled = true;
             
             const currentPhaseData = phases[gameStats.currentPhase];
-            const startIndex = currentPhaseData.startIndex;
-            const endIndex = currentPhaseData.endIndex;
-
-            const questionsForPhase = scenarios.filter((_, index) => index >= startIndex && index < endIndex);
+            const availableQuestions = scenarios.slice(currentPhaseData.startIndex, currentPhaseData.endIndex);
             
-            const usedQuestionsForPhase = usedQuestions.filter(index => index >= startIndex && index < endIndex);
-            
-            const unusedQuestions = questionsForPhase.filter((_, index) => 
-                !usedQuestionsForPhase.includes(startIndex + index)
+            const unusedQuestions = availableQuestions.filter((_, index) => 
+                !usedQuestions.includes(currentPhaseData.startIndex + index)
             );
             
             if (unusedQuestions.length === 0) {
@@ -2965,7 +2997,7 @@
             gameStats.knowledge += bonusPoints;
             gameStats.joyCoins += 3;
             
-            playAudio(sfxCoin);
+            playSound('sfxCoin');
             
             createJoyCoin();
             showMessage(`💎 Casa Bônus! +${bonusPoints} Conhecimento e +3 Moedas da Alegria!`, 'success');
@@ -2983,7 +3015,7 @@
         }
 
         function showBoardHelp() {
-            showMessage('🎯 Avance casa por casa. Clique em "Testar Pergunta" nas casas ❓ ou ⚡. 💎 Casas bônus dão pontos extras. ⚡ Casas desafio dobram os pontos da próxima pergunta.', 'info');
+            showMessage('🎯 Avance casa por casa usando "Avançar 1 Casa". Clique em "Testar Pergunta" nas casas ❓ ou ⚡. 💎 Casas bônus dão pontos extras. ⚡ Casas desafio dobram os pontos da próxima pergunta.', 'info');
         }
 
         function showMessage(text, type = 'success') {
@@ -3031,10 +3063,8 @@
             const currentPhaseData = phases[gameStats.currentPhase];
             const availableQuestions = scenarios.slice(currentPhaseData.startIndex, currentPhaseData.endIndex);
             
-            const usedQuestionsForPhase = usedQuestions.filter(index => index >= currentPhaseData.startIndex && index < currentPhaseData.endIndex);
-
             const unusedQuestions = availableQuestions.filter((_, index) => 
-                !usedQuestionsForPhase.includes(currentPhaseData.startIndex + index)
+                !usedQuestions.includes(currentPhaseData.startIndex + index)
             );
             
             if (unusedQuestions.length === 0) {
@@ -3103,18 +3133,16 @@
             character.classList.add('has-image');
             character.innerHTML = ''; 
             
-            // TEMPO DE TRANSIÇÃO LENTA: 5000ms (5 segundos)
+            // Transição lenta: Volta para a imagem default (girl_d) após 500ms
             setTimeout(() => {
-                if (phases[gameStats.currentPhase].type === 'character') {
-                    // Retorna para a imagem default/pensativo da garota (fase 'character')
+                const currentPhaseData = phases[gameStats.currentPhase];
+                if (currentPhaseData.type === 'character') {
                     character.style.background = `url(${characterImages.girl_d}) center/cover no-repeat`;
                 } else {
-                    // Retorna para o estado inicial sem imagem (fase 'board')
-                    character.style.background = 'linear-gradient(135deg, #74b9ff, #0984e3)';
+                    character.style.background = 'transparent'; 
                     character.classList.remove('has-image');
-                    character.innerHTML = '👦🏻'; 
                 }
-            }, 5000); 
+            }, 500); 
         }
 
         function selectOption(option, scenario) {
@@ -3136,49 +3164,45 @@
                 const coinsEarned = Math.floor(finalPoints / 10) + 1;
                 gameStats.joyCoins += coinsEarned;
                 createJoyCoin();
-                playAudio(sfxCoin);
+                playSound('sfxCoin');
                 showMessage(`🪙 +${coinsEarned} Moedas da Alegria! ${option.feedback}`, 'success');
             } else {
                 gameStats.bombs++;
                 createBombExplosion();
-                playAudio(sfxError);
+                playSound('sfxError');
                 showMessage(`💣 BOOM! Bomba coletada! ${option.feedback}`, 'warning');
             }
             
             gameStats.phaseProgress++;
             
             const currentPhaseData = phases[gameStats.currentPhase];
+            if (currentPhaseData.type === 'board') {
+                document.getElementById('board-questions').textContent = `❓ Perguntas: ${gameStats.phaseProgress}/${gameStats.questionsPerPhase}`;
+            }
+            
+            if (gameStats.phaseProgress >= gameStats.questionsPerPhase && currentPhaseData.type === 'character') {
+                completePhase();
+            } else {
+                if (gameStats.knowledge >= 100) {
+                    gameStats.medals++;
+                    gameStats.knowledge = 50;
+                    showMessage(`🏅 Medalha conquistada! Conhecimento resetado para continuar!`, 'success');
+                }
+            }
             
             updateDisplay();
             updatePhaseDisplay();
             closeModal();
             
+            // Re-enable Advance/Test button after question is answered and mode is board
             if (currentPhaseData.type === 'board') {
+                document.getElementById('test-question-btn').disabled = false;
                 document.getElementById('advance-btn').disabled = false;
-                
-                const currentSquare = boardState.boardSquares[boardState.currentPosition];
-                if (currentSquare.type === 'question' || currentSquare.type === 'challenge') {
-                    if (gameStats.phaseProgress < gameStats.questionsPerPhase) {
-                        document.getElementById('test-question-btn').disabled = true;
-                    } else {
-                        document.getElementById('advance-btn').disabled = true;
-                        document.getElementById('test-question-btn').disabled = true;
-                        handleFinishSquare();
-                    }
-                }
-            } else if (gameStats.phaseProgress >= gameStats.questionsPerPhase) {
-                completePhase();
-            }
-
-            if (gameStats.knowledge >= 100) {
-                gameStats.medals++;
-                gameStats.knowledge = 50;
-                showMessage(`🏅 Medalha conquistada! Conhecimento resetado para continuar!`, 'success');
             }
         }
 
         function completePhase() {
-            playAudio(sfxWin);
+            playSound('sfxWin');
             
             const currentPhaseData = phases[gameStats.currentPhase];
             gameStats.completedPhases.push(gameStats.currentPhase);
@@ -3206,8 +3230,6 @@
             const modal = document.getElementById('phase-complete-modal');
             modal.style.display = 'none';
             
-            usedQuestions = []; 
-            
             if (gameStats.currentPhase < 4) {
                 gameStats.currentPhase++;
                 gameStats.phaseProgress = 0;
@@ -3225,12 +3247,12 @@
             
             showMessage('🎯🏆 PARABÉNS! Você é oficialmente um ESPECIALISTA EM SEXUALIDADE! Todas as 4 fases concluídas com sucesso! 🏆🎯', 'success');
             
-            playAudio(sfxWin);
+            playSound('sfxWin');
             
             const character = document.getElementById('boy-character');
             character.textContent = '🏆';
             character.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
-            character.style.backgroundImage = `url(${characterImages.boy_a})`; 
+            character.style.backgroundImage = "url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face')";
             character.style.backgroundBlendMode = 'overlay';
             
             const thoughtBubble = document.getElementById('thought-bubble');
@@ -3244,7 +3266,6 @@
             const coin = document.createElement('div');
             coin.className = 'joy-coin';
             coin.textContent = '🪙';
-            
             coin.style.left = (rect.left + rect.width / 2) + 'px';
             coin.style.top = (rect.top + rect.height / 2) + 'px';
             
@@ -3262,7 +3283,6 @@
             const bomb = document.createElement('div');
             bomb.className = 'bomb-explosion';
             bomb.textContent = '💥';
-            
             bomb.style.left = (rect.left + rect.width / 2) + 'px';
             bomb.style.top = (rect.top + rect.height / 2) + 'px';
             
@@ -3299,20 +3319,90 @@
                 }, 5000);
             }
         }
-        
+
+        function skipToNextPhase() {
+            if (gameStats.currentPhase < 4) {
+                gameStats.currentPhase++;
+                gameStats.phaseProgress = 0;
+                updatePhaseDisplay();
+                showMessage(`⏭️ Pulando para ${phases[gameStats.currentPhase].name}`, 'info');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('question-modal').style.display = 'none';
+        }
+
+        function resetRoom() {
+            gameStats = {
+                knowledge: 50,
+                medals: 0,
+                currentPhase: 1,
+                questionsAnswered: 0,
+                questionsPerPhase: 14,
+                phaseProgress: 0,
+                completedPhases: [],
+                joyCoins: 0,
+                bombs: 0,
+                doublePoints: false
+            };
+            
+            boardState = {
+                currentPosition: 0,
+                totalMoves: 0,
+                boardSquares: [],
+                isRolling: false,
+                questionsAnswered: 0,
+                lastDiceRoll: 0
+            };
+            
+            usedQuestions = [];
+            
+            for (let i = 1; i <= 4; i++) {
+                const rewardElement = document.getElementById(`reward-${i}`);
+                rewardElement.classList.remove('completed');
+            }
+            
+            const character = document.getElementById('boy-character');
+            character.innerHTML = '';
+            character.style.background = phases[1].color;
+            character.style.backgroundImage = '';
+            
+            const boardPath = document.getElementById('board-path');
+            if (boardPath) {
+                boardPath.innerHTML = '';
+            }
+            
+            const rollButton = document.getElementById('advance-btn');
+            if (rollButton) {
+                rollButton.disabled = false;
+                rollButton.textContent = '⏩ Avançar 1 Casa';
+            }
+            
+            updateDisplay();
+            updatePhaseDisplay();
+            showMessage('🔄 Jornada reiniciada! Tabuleiro e progresso foram resetados!', 'info');
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const muteButton = document.getElementById('mute-button');
+            muteButton.textContent = isMuted ? '🔇' : '🔊';
+            showMessage(isMuted ? '🔇 Som desligado' : '🔊 Som ligado', 'info');
+            
+            const videoEl = document.getElementById('intro-video');
+            if (videoEl) {
+                videoEl.muted = isMuted;
+            }
+            
+            const bgm = document.getElementById('bgm');
+            bgm.muted = isMuted;
+        }
+
+        // Initialize the game when page loads
         document.addEventListener('DOMContentLoaded', initGame);
         
-        document.addEventListener('touchstart', function() {}, {passive: true});
-        
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-        
+        // Handlers para o Viewport para dispositivos móveis
         window.addEventListener('orientationchange', function() {
             setTimeout(() => {
                 const gameBoard = document.getElementById('game-board');
@@ -3320,14 +3410,10 @@
                     generateBoardPath();
                     updatePlayerPosition();
                 }
-                
                 const vh = window.innerHeight * 0.01;
                 document.documentElement.style.setProperty('--vh', `${vh}px`);
             }, 100);
         });
-        
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
         
         window.addEventListener('resize', function() {
             const vh = window.innerHeight * 0.01;
@@ -3341,12 +3427,8 @@
                 }, 100);
             }
         });
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            window.deferredPrompt = e;
-        });
 
+        // Close modal when clicking outside
         document.getElementById('question-modal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
@@ -3359,5 +3441,5 @@
             }
         });
     </script>
- </body>
- </html>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991e1b5c2717f1f2',t:'MTc2MTAyMTk0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
