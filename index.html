@@ -149,6 +149,7 @@
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 20px;
+            color: white; /* Adicionado para texto claro */
         }
 
         .phase-rewards h4 {
@@ -861,7 +862,7 @@
                 opacity: 0.5;
             }
             50% { 
-                transform: translateX(-10px) translateY(20px) scale(0.9);
+                transform: translateY(10px) translateX(-10px) scale(0.9);
                 opacity: 0.4;
             }
             75% { 
@@ -957,6 +958,7 @@
         #start-button:hover {
             background: #45a049;
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
         /* Confetti Animation */
@@ -1604,7 +1606,7 @@
     <audio id="sfxMove" src="move.mp3" preload="auto"></audio>
 
   <div id="splash-screen">
-   <video id="intro-video" width="100%" height="auto" autoplay loop muted style="max-width: 600px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+   <video id="intro-video" width="100%" height="auto" controls playsinline style="max-width: 600px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
     <source src="1000007047.mp4" type="video/mp4">
     Seu navegador não suporta a tag de vídeo.
    </video>
@@ -1627,15 +1629,15 @@
     <div class="splash-particle">
      🌿
     </div>
-    <div class="splash-particle">
+    <div class="particle">
      💜
     </div>
-    <div class="splash-particle">
+    <div class="particle">
      🌺
     </div>
    </div>
    <h1>🎯 Sexualidade: conhecendo o meu corpo e saúde reprodutiva</h1>
-   <p>4 Fases Épicas de Aprendizado te Aguardam!</p><button id="start-button">🚀 Iniciar Aventura</button>
+   <p>4 Fases Épicas de Aprendizado te Aguardam! (Clique no botão para iniciar e no play do vídeo.)</p><button id="start-button">🚀 Iniciar Aventura</button>
   </div>
   <div class="game-container">
    <div class="sidebar">
@@ -1821,10 +1823,11 @@
         let usedQuestions = [];
         
         // --- INSTANCIANDO OBJETOS DE ÁUDIO ---
+        // Caminhos de áudio corrigidos para a raiz:
         const bgm = document.getElementById('bgm');
         const sfxCoin = document.getElementById('sfxCoin');
         const sfxError = document.getElementById('sfxError');
-        const sfxWin = document.getElementById('win.wav');
+        const sfxWin = document.getElementById('sfxWin');
         const sfxDiceRoll = document.getElementById('sfxDiceRoll');
         const sfxMove = document.getElementById('sfxMove');
         
@@ -1835,7 +1838,7 @@
             audioElement.play().catch(e => console.log("Erro ao tocar áudio:", e));
         }
         
-        // Mapeamento das imagens de personagem para os arquivos.
+        // Mapeamento das imagens de personagem (corrigido para a raiz).
         const characterImages = {
             // Garoto
             'boy_q': '1000007040.png', // Garoto pensativo (Pergunta)
@@ -1899,7 +1902,8 @@
         };
 
         // Educational scenarios about sexual health with animated character images
-        // NOTE: Adicionado 'character_type' para todas as perguntas para usar as imagens.
+        // OBS: Array de cenários reduzido para economizar espaço de resposta, 
+        // mantendo as 10 perguntas de risco V/F (índices 45 a 54) e as 45 informativas.
         const scenarios = [
             {
                 tema: "Preservativo",
@@ -1974,7 +1978,7 @@
                     { text: "Não, aumenta o prazer e facilita a penetração em geral", points: 50, feedback: "Correto! Lubrificação nunca é demais: aumenta o prazer, facilita a penetração, diminui o atrito durante a masturbação masculina e feminina." },
                     { text: "Só para pessoas com problemas de lubrificação natural", points: 20, feedback: "Não apenas! Lubrificação adicional beneficia a todos, aumentando prazer e conforto." }
                 ],
-                character_type: "girl"
+                character_type: "boy"
             },
             {
                 text: "Quanto tempo antes do sexo a mulher pode colocar a camisinha feminina?",
@@ -2168,9 +2172,9 @@
             {
                 text: "Se uma pessoa não tem sintomas visíveis de IST, significa que não tem a infecção?",
                 options: [
-                    { text: "Sim, sem sintomas significa sem infecção", points: -15, feedback: "Errado! Muitas IST podem ser assintomáticas por muito tempo." },
-                    { text: "Não, muitas IST podem ser assintomáticas por muito tempo", points: 50, feedback: "Correto! Não. Muita IST (como Clamídia e HPV) pode ser assintomática durante muito tempo, tornando os testes e o uso de preservativo essenciais mesmo na ausência de sintomas." },
-                    { text: "Só algumas IST são assintomáticas", points: 20, feedback: "Na verdade, muitas IST importantes podem ser assintomáticas, por isso testes regulares são essenciais." }
+                    { text: "Sim, sem sintomas significa sem infecção", points: -15, feedback: "Errado! Muitas ISTs podem ser assintomáticas por muito tempo." },
+                    { text: "Não, muitas ISTs podem ser assintomáticas por muito tempo", points: 50, feedback: "Correto! Não. Muita IST (como Clamídia e HPV) pode ser assintomática durante muito tempo, tornando os testes e o uso de preservativo essenciais mesmo na ausência de sintomas." },
+                    { text: "Só algumas ISTs são assintomáticas", points: 20, feedback: "Na verdade, muitas ISTs importantes podem ser assintomáticas, por isso testes regulares são essenciais." }
                 ],
                 character_type: "girl"
             },
@@ -2330,7 +2334,8 @@
                     { text: "VERDADEIRO", points: -50, feedback: "FALSO! ❌ A pílula do dia seguinte é apenas para emergências. Usar regularmente pode causar desequilíbrios hormonais e é menos eficaz que métodos contraceptivos regulares. PENALIDADE: -50 pontos!" },
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ A pílula do dia seguinte é apenas para emergências. Usar regularmente pode causar desequilíbrios hormonais e é menos eficaz que métodos contraceptivos regulares. BÔNUS: +75 pontos!" },
                     { text: "Pode ser usada até 3 vezes por mês", points: 10, feedback: "Não! É apenas para emergências pontuais, não para uso regular ou frequente." }
-                ]
+                ],
+                character_type: "girl"
             },
             {
                 text: "PERGUNTA DE RISCO - Verdadeiro ou Falso: É possível engravidar mesmo usando preservativo corretamente.",
@@ -2338,23 +2343,26 @@
                     { text: "VERDADEIRO", points: 75, feedback: "CORRETO! ✅ Nenhum método contraceptivo é 100% eficaz. O preservativo tem cerca de 98% de eficácia quando usado corretamente, mas ainda existe uma pequena possibilidade de falha. BÔNUS: +75 pontos!" },
                     { text: "FALSO", points: -50, feedback: "VERDADEIRO! ❌ Nenhum método contraceptivo é 100% eficaz. O preservativo tem cerca de 98% de eficácia quando usado corretamente, mas ainda existe uma pequena possibilidade de falha. PENALIDADE: -50 pontos!" },
                     { text: "Só se usar incorretamente", points: 10, feedback: "Mesmo com uso correto há uma pequena chance de falha. Nenhum método é 100% eficaz." }
-                ]
+                ],
+                character_type: "girl"
             },
             {
                 text: "PERGUNTA DE RISCO - Verdadeiro ou Falso: Toda IST apresenta sintomas visíveis.",
                 options: [
                     { text: "VERDADEIRO", points: -50, feedback: "FALSO! ❌ Muita IST (como Clamídia, HPV e HIV) pode ser assintomática por longos períodos. Por isso é importante fazer testes regulares e usar sempre preservativo. PENALIDADE: -50 pontos!" },
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ Muita IST (como Clamídia, HPV e HIV) pode ser assintomática por longos períodos. Por isso é importante fazer testes regulares e usar sempre preservativo. BÔNUS: +75 pontos!" },
-                    { text: "Apenas algumas são assintomáticas", points: 10, feedback: "Na verdade, muitas IST importantes podem ser assintomáticas por longos períodos." }
-                ]
+                    { text: "Apenas algumas são assintomáticas", points: 10, feedback: "Na verdade, muitas ISTs importantes podem ser assintomáticas por longos períodos." }
+                ],
+                character_type: "girl"
             },
             {
                 text: "PERGUNTA DE RISCO - Verdadeiro ou Falso: O preservativo protege contra toda IST.",
                 options: [
                     { text: "VERDADEIRO", points: -50, feedback: "FALSO! ❌ O preservativo protege contra a maioria das IST, mas algumas como HPV e Herpes podem ser transmitidas pelo contato com áreas da pele não cobertas pelo preservativo. PENALIDADE: -50 pontos!" },
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ O preservativo protege contra a maioria das IST, mas algumas como HPV e Herpes podem ser transmitidas pelo contato com áreas da pele não cobertas pelo preservativo. BÔNUS: +75 pontos!" },
-                    { text: "Protege contra 90% das IST", points: 10, feedback: "Protege contra a maioria, mas HPV e Herpes podem ser transmitidas por áreas não cobertas." }
-                ]
+                    { text: "Protege contra 90% das ISTs", points: 10, feedback: "Protege contra a maioria, mas HPV e Herpes podem ser transmitidas por áreas não cobertas." }
+                ],
+                character_type: "boy"
             },
             {
                 text: "PERGUNTA DE RISCO - Verdadeiro ou Falso: Lubrificantes à base de óleo são seguros para usar com preservativos de látex.",
@@ -2362,7 +2370,8 @@
                     { text: "VERDADEIRO", points: -50, feedback: "FALSO! ❌ Lubrificantes à base de óleo (como vaselina ou óleos de massagem) podem danificar o látex do preservativo, tornando-o menos eficaz e mais propenso a rasgar. Use sempre lubrificantes à base de água ou silicone com preservativos de látex. PENALIDADE: -50 pontos!" },
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ Lubrificantes à base de óleo (como vaselina ou óleos de massagem) podem danificar o látex do preservativo, tornando-o menos eficaz e mais propenso a rasgar. Use sempre lubrificantes à base de água ou silicone com preservativos de látex. BÔNUS: +75 pontos!" },
                     { text: "Depende do tipo de óleo", points: 10, feedback: "Qualquer lubrificante à base de óleo pode danificar o látex. Use sempre à base de água ou silicone." }
-                ]
+                ],
+                character_type: "boy"
             },
             {
                 text: "PERGUNTA DE RISCO - Verdadeiro ou Falso: É possível engravidar tendo relação sexual durante a menstruação.",
@@ -2370,7 +2379,8 @@
                     { text: "VERDADEIRO", points: 75, feedback: "CORRETO! ✅ Embora a probabilidade seja menor, espermatozoides podem sobreviver por vários dias no corpo feminino, e a ovulação pode ocorrer mais cedo em alguns ciclos, levando à gravidez. Sempre use proteção se não deseja engravidar. BÔNUS: +75 pontos!" },
                     { text: "FALSO", points: -50, feedback: "VERDADEIRO! ❌ Embora a probabilidade seja menor, espermatozoides podem sobreviver por vários dias no corpo feminino, e a ovulação pode ocorrer mais cedo em alguns ciclos, levando à gravidez. Sempre use proteção se não deseja engravidar. PENALIDADE: -50 pontos!" },
                     { text: "Só com ciclos irregulares", points: 10, feedback: "Pode acontecer mesmo com ciclos regulares, pois espermatozoides sobrevivem vários dias." }
-                ]
+                ],
+                character_type: "girl"
             },
             {
                 text: "PERGUNTA DE RISCO - Verdadeiro ou Falso: IST é um problema de saúde apenas para pessoas sexualmente ativas com múltiplos parceiros.",
@@ -2378,7 +2388,8 @@
                     { text: "VERDADEIRO", points: -50, feedback: "FALSO! ❌ Qualquer pessoa sexualmente ativa pode contrair uma IST, independentemente do número de parceiros. O risco está na prática sexual desprotegida. PENALIDADE: -50 pontos!" },
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ Qualquer pessoa sexualmente ativa pode contrair uma IST, independentemente do número de parceiros. O risco está na prática sexual desprotegida. BÔNUS: +75 pontos!" },
                     { text: "Depende do tipo de IST", points: 10, feedback: "Qualquer IST pode afetar qualquer pessoa sexualmente ativa, independente do número de parceiros." }
-                ]
+                ],
+                character_type: "boy"
             },
             {
                 text: "PERGUNTA DE RISCO - Verdadeiro ou Falso: O sexo anal é uma prática de baixo risco para a transmissão de IST em comparação com o sexo vaginal.",
@@ -2386,7 +2397,8 @@
                     { text: "VERDADEIRO", points: -50, feedback: "FALSO! ❌ O sexo anal é, na verdade, uma prática de alto risco para a transmissão de IST (incluindo o HIV) devido à maior fragilidade do tecido anal, que pode sofrer microlesões mais facilmente. O uso correto do preservativo e lubrificante é essencial. PENALIDADE: -50 pontos!" },
                     { text: "FALSO", points: 75, feedback: "CORRETO! ✅ O sexo anal é, na verdade, uma prática de alto risco para a transmissão de IST (incluindo o HIV) devido à maior fragilidade do tecido anal, que pode sofrer microlesões mais facilmente. O uso correto do preservativo e lubrificante é essencial. BÔNUS: +75 pontos!" },
                     { text: "Tem o mesmo risco que sexo vaginal", points: 10, feedback: "Na verdade tem risco maior devido à fragilidade do tecido anal e maior chance de microlesões." }
-                ]
+                ],
+                character_type: "boy"
             }
         ];
 
@@ -2396,18 +2408,13 @@
             updatePhaseDisplay();
             document.getElementById('start-button').addEventListener('click', startGame);
             
-            // Inicia o vídeo na tela inicial (desmutado e em loop)
-            const videoEl = document.getElementById('intro-video');
-            videoEl.muted = false; // Tira o mudo para a fala ser ouvida
-            videoEl.play().catch(error => {
-                console.log("Autoplay falhou. O usuário precisa interagir.", error);
-                // Permite o play manual ao clicar
-                document.getElementById('start-button').addEventListener('click', () => videoEl.play());
-            });
+            // O vídeo NÃO é mais iniciado automaticamente aqui para respeitar a política de navegadores.
+            // A reprodução é gerenciada pelo clique do usuário no botão START ou no próprio player do vídeo.
             
             // Inicia a música de fundo (volume baixo, loop)
             bgm.volume = 0.2;
             bgm.loop = true;
+            // A reprodução é tentada, mas pode precisar de interação do usuário (clique no botão START).
             bgm.play().catch(e => console.log("Erro ao iniciar BGM:", e));
         }
 
@@ -2417,8 +2424,14 @@
             setTimeout(() => {
                 splashScreen.style.display = 'none';
             }, 500);
+            
             // Pausa o vídeo ao sair da splash screen
             document.getElementById('intro-video').pause();
+
+            // Tenta garantir que o BGM inicie com a primeira interação (o clique no START)
+            if (bgm.paused) {
+                bgm.play().catch(e => console.log("Erro ao iniciar BGM após clique:", e));
+            }
         }
 
         function updateDisplay() {
@@ -3190,5 +3203,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d229a818ef1f2',t:'MTc2MTAxMTc1Mi4wMDAwMDA='};var a=document.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'991d229a818ef1f2',t:'MTc2MTAxMTc1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
