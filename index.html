@@ -1,511 +1,634 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexão Corpo: Saúde Reprodutiva, Sexualidade e Saúde Íntima</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 10% { transform: translateX(-5px); } 20% { transform: translateX(5px); } 30% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 50% { transform: translateX(0); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .pulse { animation: pulse 2s infinite; }
-        .shake { animation: shake 0.5s ease-in-out; }
-        .fade-in { animation: fadeIn 0.5s ease; }
-        .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
-        .neon-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 0 30px rgba(255, 107, 107, 0.3); }
-        .locked { filter: grayscale(80%) brightness(0.5); pointer-events: none; cursor: not-allowed; }
-        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out; }
-        #video-container video { width: 100%; height: 100%; object-fit: cover; }
-        #play-video { position: absolute; z-index: 10001; font-size: 80px; color: white; background: rgba(0, 0, 0, 0.4); border: 3px solid white; border-radius: 50%; width: 120px; height: 120px; line-height: 120px; text-align: center; cursor: pointer; transition: all 0.3s; }
-        #play-video:hover { background: rgba(255, 107, 107, 0.5); transform: scale(1.1); }
-        #skip-video { position: absolute; bottom: 30px; right: 30px; padding: 12px 25px; font-size: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); color: white; border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 10px; cursor: pointer; z-index: 10000; transition: all 0.3s; }
-        #skip-video:hover { background: rgba(255, 255, 255, 0.4); border-color: white; }
-        #video-container.hidden { opacity: 0; pointer-events: none; }
-        .answer-btn { white-space: normal; text-align: left; line-height: 1.4; padding-top: 0.75rem; padding-bottom: 0.75rem; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conexão Corpo: Saúde Reprodutiva, Sexualidade e Saúde Íntima</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* O teu CSS (styles) completo fica aqui... (sem alterações) */
+        body {
+            box-sizing: border-box;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10% { transform: translateX(-5px); } 20% { transform: translateX(5px); } 30% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 50% { transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .pulse { animation: pulse 2s infinite; }
+        .shake { animation: shake 0.5s ease-in-out; }
+        .fade-in { animation: fadeIn 0.5s ease; }
+        .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        .neon-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 0 30px rgba(255, 107, 107, 0.3); }
+        .locked { filter: grayscale(80%) brightness(0.5); pointer-events: none; cursor: not-allowed; }
+        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out; }
+        #video-container video { width: 100%; height: 100%; object-fit: cover; }
+        #play-video { position: absolute; z-index: 10001; font-size: 80px; color: white; background: rgba(0, 0, 0, 0.4); border: 3px solid white; border-radius: 50%; width: 120px; height: 120px; line-height: 120px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        #play-video:hover { background: rgba(255, 107, 107, 0.5); transform: scale(1.1); }
+        #skip-video { position: absolute; bottom: 30px; right: 30px; padding: 12px 25px; font-size: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); color: white; border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 10px; cursor: pointer; z-index: 10000; transition: all 0.3s; }
+        #skip-video:hover { background: rgba(255, 255, 255, 0.4); border-color: white; }
+        #video-container.hidden { opacity: 0; pointer-events: none; }
+        .answer-btn { white-space: normal; text-align: left; line-height: 1.4; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+        
+        /* Trilha Styles */
+        .trail-path { 
+            display: grid; 
+            grid-template-columns: repeat(10, 1fr); 
+            gap: 8px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .trail-house { 
+            width: 60px; 
+            height: 60px; 
+            border: 3px solid #fff; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 24px; 
+            position: relative; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .trail-house:hover { transform: scale(1.1); }
+        .trail-house.current { border-color: #ffd700; box-shadow: 0 0 20px #ffd700; }
+        
+        /* Peão */
+        .pawn { 
+            position: absolute; 
+            top: -15px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 30px; 
+            z-index: 10;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Roleta */
+        .roulette { 
+            width: 200px; 
+            height: 200px; 
+            border-radius: 50%; 
+            position: relative; 
+            margin: 0 auto; 
+            cursor: pointer;
+            transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .roulette-section { 
+    S         position: absolute; 
+            width: 50%; 
+            height: 50%; 
+            transform-origin: 100% 100%; 
+        }
+        .roulette-pointer { 
+            position: absolute; 
+            top: -10px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 0; 
+            height: 0; 
+            border-left: 15px solid transparent; 
+            border-right: 15px solid transparent; 
+            border-top: 30px solid #ffd700; 
+            z-index: 20;
+        }
+        
+        /* Efeitos */
+        @keyframes starExplosion {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.5) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(2) rotate(360deg); opacity: 0; }
+        }
+        @keyframes bombExplosion {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.9; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+        .star-effect { 
+            position: fixed; 
+            font-size: 60px; 
+            z-index: 1000; 
+            animation: starExplosion 2s ease-out forwards; 
+            pointer-events: none;
+        }
+        .bomb-effect { 
+            position: fixed; 
+            font-size: 80px; 
+            z-index: 1000; 
+            animation: bombExplosion 1.5s ease-out forwards; 
+            pointer-events: none;
+        }
+        
+        /* Cores das casas */
+        .house-red { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .house-blue { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .house-green { background: linear-gradient(135deg, #95e1d3, #fce38a); }
+        .house-purple { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+        .house-orange { background: linear-gradient(135deg, #ffeaa7, #fab1a0); }
+        .house-pink { background: linear-gradient(135deg, #fd79a8, #fdcb6e); }
+        
+        /* Casa do Medo */
+        .house-fear { 
+            background: linear-gradient(135deg, #2c1810, #8b0000, #000000); 
+            border-color: #ff0000 !important;
+            box-shadow: 0 0 15px #ff0000, inset 0 0 15px rgba(255, 0, 0, 0.3);
+            animation: fearPulse 2s infinite;
+        }
+        .house-fear.current { 
+            border-color: #ffd700 !important; 
+            box-shadow: 0 0 20px #ffd700, 0 0 30px #ff0000; 
+        }
+        
+        @keyframes fearPulse {
+            0%, 100% { box-shadow: 0 0 15px #ff0000, inset 0 0 15px rgba(255, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 25px #ff0000, inset 0 0 25px rgba(255, 0, 0, 0.5); }
+        }
+    </style>
 </head>
-<body class="gradient-bg min-h-screen text-white">
+<body class="gradient-bg min-h-full text-white">
 
-    <div id="video-container">
-        <video id="intro-video" playsinline>
-            <source src="video/1000007047.mp4" type="video/mp4"> Seu navegador não suporta o vídeo.
-        </video>
-        <button id="play-video">▶</button>
-        <button id="skip-video" style="display: none;">Pular Vídeo ⏩</button>
-    </div>
+        <div id="video-container">
+        <div id="play-video" onclick="playVideo()">▶</div>
+        <button id="skip-video" onclick="skipVideo()">Pular Vídeo</button>
+        <video id="intro-video" width="640" height="360" controls playsinline style="display: none;">
+            <source src="video/1000007047.mp4" type="video/mp4">
+            O teu navegador não suporta a tag de vídeo.
+        </video>
+    </div>
 
-    <div class="bg-black bg-opacity-50 p-4 border-b border-pink-500">
-          <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-y-2">
-            <div>
-                <h1 class="text-xl md:text-2xl font-bold text-pink-400">💖 Conexão Corpo: Saúde Reprodutiva, Sexualidade e Saúde Íntima</h1>
-                <p class="text-xs md:text-sm text-gray-300">Resolva os desafios para entender seu corpo!</p>
-            </div>
-            <div class="flex items-center space-x-4 md:space-x-6">
-                <div class="text-center"><div class="text-yellow-400 font-bold text-lg md:text-xl" id="timer">10:00</div><div class="text-xs text-gray-400">TEMPO</div></div>
-                <div class="text-center"><div class="text-green-400 font-bold text-lg md:text-xl" id="score">0</div><div class="text-xs text-gray-400">PONTOS</div></div>
-                <div class="text-center"><div class="text-blue-400 font-bold text-lg md:text-xl" id="progress">0/5</div><div class="text-xs text-gray-400">SALAS</div></div>
-            </div>
-        </div>
-    </div>
+        <main class="container mx-auto px-4 py-8">
+                <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 neon-glow">
+                🌸 Conexão Corpo 🌸
+            </h1>
+            <p class="text-xl md:text-2xl text-blue-200 mb-6">
+                Saúde Reprodutiva, Sexualidade e Saúde Íntima
+            </p>
+            <div class="w-24 h-1 bg-gradient-to-r from-pink-400 to-blue-400 mx-auto rounded-full"></div>
+        </header>
 
-    <div class="max-w-6xl mx-auto p-4 md:p-6">
-        <div id="intro-screen" class="text-center py-8 md:py-12 hidden">
-            <div class="bg-black bg-opacity-70 rounded-3xl p-6 md:p-8 border border-pink-500 neon-glow">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-pink-400">🌸 JORNADA DO AUTOCONHECIMENTO</h2>
-                <p class="text-lg md:text-xl mb-6 text-gray-300">Seu corpo tem segredos! Para desvendá-los, você precisa resolver 5 desafios sobre saúde íntima e sexualidade.</p>
-                <p class="text-md md:text-lg mb-8 text-yellow-400">⏰ Você tem 10 minutos para completar a jornada!</p>
-                <button onclick="startGame()" class="bg-pink-600 hover:bg-pink-700 px-6 py-3 md:px-8 md:py-4 rounded-xl text-lg md:text-xl font-bold transition-all transform hover:scale-105 neon-glow">
-                    🔓 COMEÇAR JORNADA
-                </button>
-            </div>
-        </div>
+                <section id="welcome-section" class="mb-12">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 card-hover">
+                <h2 class="text-3xl font-bold mb-6 text-center">Bem-vinda ao seu espaço de conhecimento! 💕</h2>
+                <p class="text-lg text-center mb-8 leading-relaxed">
+                    Este é um espaço seguro e educativo para aprender sobre saúde reprodutiva, 
+                    sexualidade e cuidados íntimos. Vamos juntas descobrir informações importantes 
+                    para o seu bem-estar!
+                </p>
+                <div class="text-center">
+                    <button onclick="startGame()" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105 neon-glow">
+                        Começar Jornada de Aprendizado ✨
+                    </button>
+                </div>
+            </div>
+        </section>
 
-        <div id="game-board" class="hidden">
-             <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-                <div id="room-1" class="room-card bg-gradient-to-br from-blue-900 to-blue-700 border-2 border-blue-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(1)"> <div class="text-center"><div class="text-3xl mb-2">💧🩸</div><h3 class="text-lg font-bold mb-1">Fluidos e Ciclos</h3><p class="text-xs text-blue-200">Lubrificantes e Menstruação</p><div class="mt-3 flex justify-center"><span id="status-1" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
-                <div id="room-2" class="room-card locked bg-gradient-to-br from-red-900 to-red-700 border-2 border-red-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(2)"> <div class="text-center"><div class="text-3xl mb-2">🦠⚠️</div><h3 class="text-lg font-bold mb-1">Proteção Essencial</h3><p class="text-xs text-red-200">Riscos e Mitos sobre IST</p><div class="mt-3 flex justify-center"><span id="status-2" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
-                <div id="room-3" class="room-card locked bg-gradient-to-br from-purple-900 to-purple-700 border-2 border-purple-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(3)"> <div class="text-center"><div class="text-3xl mb-2">🧼✨</div><h3 class="text-lg font-bold mb-1">Cuidados Diários</h3><p class="text-xs text-purple-200">Higiene e Descarte</p><div class="mt-3 flex justify-center"><span id="status-3" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
-                <div id="room-4" class="room-card locked bg-gradient-to-br from-teal-900 to-teal-700 border-2 border-teal-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(4)"> <div class="text-center"><div class="text-3xl mb-2">🤝💬</div><h3 class="text-lg font-bold mb-1">Relações e Respeito</h3><p class="text-xs text-teal-200">Comunicação e Consentimento</p><div class="mt-3 flex justify-center"><span id="status-4" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
-                <div id="room-5" class="room-card locked bg-gradient-to-br from-yellow-900 to-yellow-700 border-2 border-yellow-500 rounded-2xl p-4 cursor-pointer transform transition-all hover:scale-105" onclick="enterRoom(5)"> <div class="text-center"><div class="text-3xl mb-2">🛡️❗</div><h3 class="text-lg font-bold mb-1">Prevenção e Ação</h3><p class="text-xs text-yellow-200">Preservativos e Contracepção</p><div class="mt-3 flex justify-center"><span id="status-5" class="bg-gray-600 px-3 py-1 rounded-full text-xs">🔒</span></div></div> </div>
-            </div>
+                <section id="game-section" class="hidden">
+                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6">
+                <div class="flex justify-between items-center text-center">
+                    <div>
+                        <div class="text-3xl mb-2">⭐</div>
+                        <div class="text-xl font-bold" id="stars-count">0</div>
+                        <div class="text-sm">Estrelas</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl mb-2">🏠</div>
+                        <div class="text-xl font-bold" id="position-count">1</div>
+                        <div class="text-sm">Posição</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl mb-2">❓</div>
+                        <div class="text-xl font-bold" id="questions-answered">0</div>
+                        <div class="text-sm">Perguntas</div>
+                    </div>
+                </div>
+            </div>
 
-            <div id="case-area" class="bg-black bg-opacity-50 rounded-2xl p-6 md:p-8 border border-gray-600 min-h-[400px] flex items-center justify-center">
-                 <div id="waiting-message" class="text-center py-12"> <div class="text-6xl mb-4 pulse">🌸</div> <h3 class="text-2xl font-bold text-gray-400 mb-2">Escolha uma sala desbloqueada</h3> <p class="text-gray-500">Clique para iniciar o desafio!</p> </div>
-                <div id="case-1" class="case-content hidden w-full"> <div class="bg-blue-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-blue-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-blue-400 mb-4">💧🩸 SALA 1: Fluidos e Ciclos</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-blue-300 mb-3">🧩 PUZZLE 1/3: É possível engravidar tendo relação sexual durante a menstruação?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'b', this)">Falso</button></div></div> <div id="puzzle-2-case-1" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-blue-300 mb-3">🧩 PUZZLE 2/3: Qual a diferença entre libido e desejo sexual?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'a', this)">Libido é a vontade específica, desejo é o impulso geral.</button><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'b', this)">Libido é o impulso/energia sexual geral, desejo é a vontade específica de ter atividade.</button><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'c', this)">Não há diferença, são sinônimos.</button></div></div> <div id="puzzle-3-case-1" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-blue-300 mb-3">🧩 PUZZLE 3/3: Cris teve um orgasmo ao ver uma cena do filme na TV. O pico de prazer foi causado pela liberação do neurotransmissor Dopamina?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-blue-600 p-3 rounded-lg transition-all" onclick="checkAnswer(1, 'b', this)">Falso</button></div></div> <div id="success-1" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 1 CONCLUÍDA!</h3><button onclick="completeCase(1)" class="next-button">🔓 Próxima Sala</button></div> </div> </div>
-                <div id="case-2" class="case-content hidden w-full"> <div class="bg-red-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-red-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-red-400 mb-4">🦠⚠️ SALA 2: Proteção Essencial</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-red-300 mb-3">🧩 PUZZLE 1/3: IST é um problema apenas para pessoas com múltiplos parceiros?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'b', this)">Falso</button></div></div> <div id="puzzle-2-case-2" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-red-300 mb-3">🧩 PUZZLE 2/3: O sexo anal é uma prática de baixo risco para a transmissão de IST?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'b', this)">Falso</button></div></div> <div id="puzzle-3-case-2" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-red-300 mb-3">🧩 PUZZLE 3/3: O que é 'sexting' e qual o principal risco se feito sem consentimento/segurança?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'a', this)">É enviar mensagens de texto normais; o risco é gastar muito crédito.</button><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'b', this)">É enviar conteúdo sexual explícito; o risco é a distribuição não consensual (ilegal).</button><button class="answer-btn bg-gray-700 hover:bg-red-600 p-3 rounded-lg transition-all" onclick="checkAnswer(2, 'c', this)">É marcar encontros online; o risco é conhecer pessoas perigosas.</button></div></div> <div id="success-2" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 2 CONCLUÍDA!</h3><button onclick="completeCase(2)" class="next-button">🔓 Próxima Sala</button></div> </div> </div>
-                <div id="case-3" class="case-content hidden w-full"> <div class="bg-purple-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-purple-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-purple-400 mb-4">🧼✨ SALA 3: Cuidados Diários</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-purple-300 mb-3">🧩 PUZZLE 1/3: Qual a ação correta para higiene íntima da Cris?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'a', this)">Usar sabonete perfumado na vulva e fazer ducha vaginal.</button><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'b', this)">Lavar apenas a vulva (externa) com água/sabonete e evitar ducha.</button></div></div> <div id="puzzle-2-case-3" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-purple-300 mb-3">🧩 PUZZLE 2/3: Como a Cris deve descartar o absorvente usado?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'a', this)">Jogar no vaso sanitário.</button><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'b', this)">Enrolar e jogar no lixo.</button></div></div> <div id="puzzle-3-case-3" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-purple-300 mb-3">🧩 PUZZLE 3/3: Qual calcinha a Cris deve escolher para passar o dia fora, pensando na saúde?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'a', this)">Sintética e apertada.</button><button class="answer-btn bg-gray-700 hover:bg-purple-600 p-3 rounded-lg transition-all" onclick="checkAnswer(3, 'b', this)">Algodão e confortável.</button></div></div> <div id="success-3" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 3 CONCLUÍDA!</h3><button onclick="completeCase(3)" class="next-button">🔓 Próxima Sala</button></div> </div> </div>
-                <div id="case-4" class="case-content hidden w-full"> <div class="bg-teal-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-teal-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-teal-400 mb-4">🤝💬 SALA 4: Relações e Respeito</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-teal-300 mb-3">🧩 PUZZLE 1/3: Toda IST apresenta sintomas visíveis?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'b', this)">Falso</button></div></div> <div id="puzzle-2-case-4" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-teal-300 mb-3">🧩 PUZZLE 2/3: Qual a importância da comunicação e consentimento nas relações sexuais?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'a', this)">São opcionais se o casal se conhece bem.</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'b', this)">São a base para garantir segurança, respeito e prazer mútuo.</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'c', this)">Apenas o consentimento inicial é necessário.</button></div></div> <div id="puzzle-3-case-4" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-teal-300 mb-3">🧩 PUZZLE 3/3: O que significa 'Zona de Conforto' na sexualidade?</h4><div class="grid grid-cols-1 gap-3"><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'a', this)">Evitar qualquer tipo de atividade sexual.</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'b', this)">As práticas e intimidades com as quais a pessoa se sente segura e à vontade.</button><button class="answer-btn bg-gray-700 hover:bg-teal-600 p-3 rounded-lg transition-all" onclick="checkAnswer(4, 'c', this)">Fazer apenas o que o parceiro gosta.</button></div></div> <div id="success-4" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 4 CONCLUÍDA!</h3><button onclick="completeCase(4)" class="next-button">🔓 Última Sala</button></div> </div> </div>
-                <div id="case-5" class="case-content hidden w-full"> <div class="bg-yellow-900 bg-opacity-50 rounded-xl p-4 md:p-6 border border-yellow-500 mb-6"><h2 class="text-xl md:text-2xl font-bold text-yellow-400 mb-4">🛡️❗ SALA 5: Prevenção e Ação</h2></div> <div class="space-y-4"> <div class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600"><h4 class="text-md md:text-lg font-bold text-yellow-300 mb-3">🧩 PUZZLE 1/2: É seguro usar dois preservativos ao mesmo tempo?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg transition-all" onclick="checkAnswer(5, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg transition-all" onclick="checkAnswer(5, 'b', this)">Falso</button></div></div> <div id="puzzle-2-case-5" class="question-block bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-600 hidden"><h4 class="text-md md:text-lg font-bold text-yellow-300 mb-3">🧩 PUZZLE 2/2: A pílula do dia seguinte pode ser usada como método contraceptivo regular?</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button class="answer-btn bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg transition-all" onclick="checkAnswer(5, 'a', this)">Verdadeiro</button><button class="answer-btn bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg transition-all" onclick="checkAnswer(5, 'b', this)">Falso</button></div></div> <div id="success-5" class="hidden success-message"><div class="text-4xl mb-3">✅</div><h3 class="text-xl font-bold text-green-400 mb-2">SALA 5 CONCLUÍDA!</h3><button onclick="completeCase(5)" class="finish-button">🏆 FINALIZAR JORNADA</button></div> </div> </div>
-            </div> </div> <div id="victory-screen" class="hidden text-center py-12"> <div class="bg-gradient-to-br from-green-900 to-green-700 rounded-3xl p-8 border border-green-500 neon-glow"> <div class="text-6xl mb-4">🏆</div> <h2 class="text-4xl font-bold mb-4 text-green-400">JORNADA CONCLUÍDA!</h2> <p class="text-xl mb-6 text-green-300">Parabéns! Você desvendou os desafios e aprendeu mais sobre seu corpo!</p> <div class="bg-black bg-opacity-50 rounded-xl p-6 mb-6"> <div class="grid grid-cols-3 gap-6 text-center"> <div><div class="text-2xl font-bold text-yellow-400" id="final-time">--:--</div><div class="text-sm text-gray-400">Tempo Final</div></div> <div><div class="text-2xl font-bold text-green-400" id="final-score">0</div><div class="text-sm text-gray-400">Pontuação</div></div> <div><div class="text-2xl font-bold text-blue-400">5/5</div><div class="text-sm text-gray-400">Salas Concluídas</div></div> </div> </div> <button onclick="restartGame()" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl text-xl font-bold transition-all transform hover:scale-105">🔄 JOGAR NOVAMENTE</button> </div> </div>
-    </div>
+                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 mb-6 text-center">
+                <h3 class="text-2xl font-bold mb-6">Gire a Roleta da Sorte! 🎯</h3>
+                <p class="text-lg mb-6 text-blue-200">
+                    Aqui temos diversas perguntas do nível fácil ao difícil que estão presentes em cada casa
+                </p>
+                <div class="relative inline-block">
+                    <div class="roulette-pointer"></div>
+                    <div id="roulette" class="roulette" onclick="spinRoulette()">
+                        <div class="roulette-section house-red" style="transform: rotate(0deg);"></div>
+                        <div class="roulette-section house-blue" style="transform: rotate(60deg);"></div>
+                        <div class="roulette-section house-green" style="transform: rotate(120deg);"></div>
+                        <div class="roulette-section house-purple" style="transform: rotate(180deg);"></div>
+                        <div class="roulette-section house-orange" style="transform: rotate(240deg);"></div>
+                        <div class="roulette-section house-pink" style="transform: rotate(300deg);"></div>
+                    </div>
+                </div>
+                <p class="mt-4 text-lg" id="roulette-status">Clique na roleta para começar!</p>
+            </div>
 
-    <audio id="som-fundo" src="audio/bgm.mp3" loop></audio>
-    <audio id="som-click" src="audio/coin.wav"></audio>
-    <audio id="som-correto" src="audio/win.wav"></audio>
-    <audio id="som-incorreto" src="audio/error.mp3"></audio>
-    <audio id="som-vitoria" src="audio/win.wav"></audio>
-    <audio id="som-gameover" src="audio/error.mp3"></audio>
+                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 mb-6">
+                <h3 class="text-2xl font-bold mb-6 text-center">Trilha do Conhecimento 🛤️</h3>
+                <div class="trail-path" id="trail-path">
+                                    </div>
+            </div>
 
-    <script>
-        // --- BANCO DE PERGUNTAS (14 perguntas) ---
-        const gameQuestions = [
-            // 0. (Antiga 2ª pergunta original, agora a 1ª)
-            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'a', feedback: "Sim, é possível embora menos provável. Espermatozoides sobrevivem dias." }, 
-            // 1. (Antiga 3ª pergunta original, agora a 2ª)
-            { options: {a: "Libido é a vontade específica, desejo é o impulso geral.", b: "Libido é o impulso/energia sexual geral, desejo é a vontade específica de ter atividade.", c: "Não há diferença, são sinônimos."}, answer: 'b', feedback: "Libido é o 'motor', desejo é a 'vontade de dirigir'." },
-            // 2. (PERGUNTA DE CRIS/DOPAMINA - AGORA A 3ª, inserida na Sala 1 - Puzzle 3)
-            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'a', feedback: "Verdadeiro. A Dopamina é o neurotransmissor que inunda o sistema de recompensa (Núcleo Accumbens) e é responsável pela intensa sensação de euforia e prazer do orgasmo, mesmo quando ele é induzido por estímulos emocionais ou visuais (orgasmo mental)." },
-            // 3. (Antiga 4ª pergunta original, agora a 4ª)
-            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não. Qualquer pessoa sexualmente ativa pode contrair IST sem proteção." }, 
-            // 4. (Antiga 5ª pergunta original, agora a 5ª)
-            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não, é de alto risco devido à fragilidade do tecido anal." }, 
-            // 5. (Antiga 6ª pergunta original, agora a 6ª)
-            { options: {a: "É enviar mensagens de texto normais; o risco é gastar muito crédito.", b: "É enviar conteúdo sexual explícito; o risco é a distribuição não consensual (ilegal).", c: "É marcar encontros online; o risco é conhecer pessoas perigosas."}, answer: 'b', feedback: "Sexting envolve conteúdo explícito. A distribuição sem consentimento é crime." },
-            // 6. (Antiga 7ª pergunta original, agora a 7ª)
-            { options: {a: "Usar sabonete perfumado na vulva e fazer ducha vaginal.", b: "Lavar apenas a vulva (externa) com água/sabonete e evitar ducha."}, answer: 'b', feedback: "A vagina é autolimpante. Duchas desequilibram o pH. Lave só externamente com sabonete." }, 
-            // 7. (Antiga 8ª pergunta original, agora a 8ª)
-            { options: {a: "Jogar no vaso sanitário.", b: "Enrolar e jogar no lixo."}, answer: 'b', feedback: "Sempre no lixo para evitar entupimentos e poluição." }, 
-            // 8. (Antiga 9ª pergunta original, agora a 9ª)
-            { options: {a: "Sintética e apertada.", b: "Algodão e confortável."}, answer: 'b', feedback: "Algodão permite a respiração da pele, prevenindo infecções." },
-            // 9. (Antiga 10ª pergunta original, agora a 10ª)
-            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não, muitas IST podem ser assintomáticas. Teste-se regularmente." }, 
-            // 10. (Antiga 11ª pergunta original, agora a 11ª)
-            { options: {a: "São opcionais se o casal se conhece bem.", b: "São a base para garantir segurança, respeito e prazer mútuo.", c: "Apenas o consentimento inicial é necessário."}, answer: 'b', feedback: "Consentimento deve ser contínuo, claro e entusiástico." }, 
-            // 11. (Antiga 12ª pergunta original, agora a 12ª)
-            { options: {a: "Evitar qualquer tipo de atividade sexual.", b: "As práticas e intimidades com as quais a pessoa se sente segura e à vontade.", c: "Fazer apenas o que o parceiro gosta."}, answer: 'b', feedback: "Explorar fora da zona de conforto exige confiança e consentimento mútuo." },
-            // 12. (Antiga 13ª pergunta original, agora a 13ª)
-            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não! O atrito aumenta o risco de rasgarem. Use apenas um." }, 
-            // 13. (Antiga 14ª pergunta original, agora a 14ª)
-            { options: {a: "Verdadeiro", b: "Falso"}, answer: 'b', feedback: "Não, é apenas para emergências. É menos eficaz e pode desregular hormônios." }
-        ];
+                        <div id="question-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white bg-opacity-95 backdrop-blur-lg rounded-2xl p-8 max-w-2xl mx-4 text-gray-800">
+                    <h3 id="modal-question-text" class="text-xl font-bold mb-6"></h3>
+                    <div id="modal-answers-container" class="space-y-3 mb-6"></div>
+                    <div class="text-center">
+                        <button id="confirm-answer" onclick="confirmAnswer()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold disabled:opacity-50" disabled>
+                            Confirmar Resposta
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-        // --- Variáveis Globais ---
-        const TOTAL_CASES = 5;
-        const PUZZLES_PER_CASE = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 2 };
-        const INITIAL_TIME = 600;
-        let gameState = {};
-        let currentPuzzle = {};
-        // *** VARIÁVEL GLOBAL DEFINIDA CORRETAMENTE AQUI ***
-        let jogoIniciado = false;
+                        <div id="fear-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+                <div class="bg-gradient-to-br from-red-900 to-black border-4 border-red-600 rounded-2xl p-8 max-w-2xl mx-4 text-white shadow-2xl" style="box-shadow: 0 0 30px #ff0000;">
+                    <h3 id="fear-title" class="text-2xl font-bold mb-4 text-center text-red-400"></h3>
+                    <p id="fear-question" class="text-lg mb-6 text-center"></p>
+                    <div id="fear-input-container" class="mb-6"></div>
+                    <div id="fear-reward" class="hidden bg-red-800 border border-red-600 rounded-lg p-4 mb-4 text-center"></div>
+                    <div class="text-center">
+                        <button id="fear-confirm" onclick="confirmFearAnswer()" class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold disabled:opacity-50 mr-4" disabled>
+                            Confirmar
+                        </button>
+                        <button id="fear-continue" onclick="continueFearGame()" class="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-semibold hidden">
+                            Continuar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        // --- Elementos DOM ---
-        const videoContainer = document.getElementById('video-container');
-        const introVideo = document.getElementById('intro-video');
-        const skipButton = document.getElementById('skip-video');
-        const playButton = document.getElementById('play-video');
-        const introScreen = document.getElementById('intro-screen');
-        const gameBoard = document.getElementById('game-board');
-        const victoryScreen = document.getElementById('victory-screen');
-        const timerDisplay = document.getElementById('timer');
-        const scoreDisplay = document.getElementById('score');
-        const progressDisplay = document.getElementById('progress');
-        const caseArea = document.getElementById('case-area');
-        const waitingMessage = document.getElementById('waiting-message');
+                <section id="results-section" class="hidden">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 text-center">
+                <h2 class="text-3xl font-bold mb-6">Parabéns! Você completou o quiz! 🎉</h2>
+                <div class="text-6xl mb-6" id="score-emoji">🌟</div>
+                <p class="text-2xl mb-4">Sua pontuação: <span id="final-score" class="font-bold text-yellow-400"></span></p>
+                <p id="score-message" class="text-lg mb-8"></p>
+                
+                <div class="space-y-4">
+                    <button onclick="restartGame()" class="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105">
+                        Jogar Novamente 🔄
+                    </button>
+                    <button onclick="showResources()" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105 ml-4">
+                        Recursos Educativos 📚
+                    </button>
+                </div>
+            </div>
+        </section>
 
-        // --- Funções de Áudio ---
-        function tocarSom(id) {
-            try {
-                const audio = document.getElementById(id);
-                if (audio) {
-                    audio.currentTime = 0;
-                    audio.play().catch(e => console.warn(`Som ${id} bloqueado:`, e.message));
-                } else { console.error(`Áudio #${id} não encontrado!`); }
-            } catch (error) { console.error(`Erro ao tocar som #${id}:`, error); }
-        }
+                <section id="resources-section" class="hidden">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">Recursos Educativos 📚</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
 
-        // --- Funções de Controle do Vídeo ---
-        function handleVideoEnd() {
-            console.log("handleVideoEnd chamada.");
-            if (typeof jogoIniciado === 'undefined') { console.error("ERRO GRAVE: jogoIniciado não está definido!"); jogoIniciado = false; }
-            if (jogoIniciado) { console.log("Jogo já iniciado, ignorando handleVideoEnd."); return; }
-            videoContainer.classList.add('hidden');
-            introScreen.classList.remove('hidden');
-            introScreen.classList.add('fade-in');
-            document.body.style.overflow = 'auto';
-            console.log("Vídeo terminado/pulado, mostrando intro do jogo.");
-        }
+                <div class="text-center mt-8">
+                    <button onclick="backToWelcome()" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300">
+                        ← Voltar ao Início
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        function tocarVideoIntro() {
-            console.log("tocarVideoIntro chamada.");
-            introVideo.play().then(() => {
-                playButton.style.display = 'none';
-                skipButton.style.display = 'block';
-                tocarSom('som-click');
-            }).catch(error => {
-                console.error("Erro ao tocar vídeo:", error);
-                handleVideoEnd();
-            });
-        }
+    <script>
+        // ===================================
+        // ===== 1. CARREGAMENTO DOS ÁUDIOS =====
+        // ===================================
+        // (CÓDIGO ADICIONADO AQUI)
+        const sounds = {
+            backgroundMusic: new Audio('audio/bgm.mp3'),
+            coin: new Audio('audio/coin.wav'),
+            diceRoll: new Audio('audio/dice_roll.ogg'),
+            error: new Audio('audio/error.mp3'),
+            move: new Audio('audio/move.mp3'),
+            win: new Audio('audio/win.wav')
+        };
+        sounds.backgroundMusic.loop = true;
+        sounds.backgroundMusic.volume = 0.5;
+        // ===================================
 
-        // --- Funções de Controle do Jogo ---
-        function initializeGameState() {
-            gameState = { currentCase: 0, completedCases: 0, score: 0, timeLeft: INITIAL_TIME, gameStarted: false, timer: null };
-            currentPuzzle = { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 };
-            jogoIniciado = false; // Garante reset
-            console.log("Estado do jogo inicializado/resetado.");
-        }
 
-        function startGame() {
-            console.log("startGame chamada.");
-            if (jogoIniciado) { console.warn("Tentativa de iniciar jogo já iniciado."); return; }
-            jogoIniciado = true; // Marca como iniciado
+        // Game data
+        const gameData = [
+            // ... (sem alterações)
+        ];
 
-            tocarSom('som-click');
-            introScreen.classList.add('hidden');
-            gameBoard.classList.remove('hidden');
-            gameBoard.classList.add('fade-in');
+        // Fear Houses - Casas do Medo
+        const fearHouses = [
+            // ... (sem alterações)
+        ];
 
-            // gameState já foi inicializado no load/restart
-            gameState.gameStarted = true;
+        // Game state
+        let playerPosition = 0;
+        let stars = 0;
+        let questionsAnswered = 0;
+        let currentQuestion = null;
+        let selectedAnswer = null;
+        let isSpinning = false;
+        let gameFinished = false;
 
-            updateUI();
-            startTimer();
-            unlockRoom(1);
-            showWaitingMessage();
-            console.log("Jogo iniciado!");
+        const colors = ['red', 'blue', 'green', 'purple', 'orange', 'pink'];
+        const houseEmojis = ['🏠', '🏡', '🏘️', '🏰', '🏯', '🏛️'];
+        const fearHousePositions = [3, 6, 9, 12, 15, 18]; // Posições das casas do medo
+        const fearHouseEmojis = ['💀', '👻', '🔥', '⚡', '🌙', '💥'];
 
-            const musicaFundo = document.getElementById('som-fundo');
-            if (musicaFundo) {
-                musicaFundo.volume = 0.3;
-                musicaFundo.play().catch(error => { console.warn("Música de fundo bloqueada.", error); document.body.addEventListener('click', () => musicaFundo.play(), { once: true }); });
-            }
-        }
+        // Video functions
+        function playVideo() {
+            const video = document.getElementById('intro-video');
+            const playBtn = document.getElementById('play-video');
+            
+            video.style.display = 'block';
+            playBtn.style.display = 'none';
+            video.play();
+            
+            video.onended = function() {
+                skipVideo();
+            };
+        }
 
-        function startTimer() {
-            clearInterval(gameState.timer);
-            console.log("Timer iniciado.");
-            gameState.timer = setInterval(() => {
-                gameState.timeLeft--;
-                updateTimerDisplay();
-                if (gameState.timeLeft <= 0) { gameOver(false); }
-            }, 1000);
-        }
+        function skipVideo() {
+            const videoContainer = document.getElementById('video-container');
+            videoContainer.classList.add('hidden');
+            setTimeout(() => {
+                videoContainer.style.display = 'none';
+            }, 500);
+        }
 
-        function updateUI() { updateTimerDisplay(); updateScoreDisplay(); updateProgressDisplay(); }
-        function updateTimerDisplay() {
-            const minutes = Math.floor(gameState.timeLeft / 60); const seconds = gameState.timeLeft % 60;
-            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            if (gameState.timeLeft <= 60 && !timerDisplay.classList.contains('text-red-500')) { timerDisplay.classList.remove('text-yellow-400'); timerDisplay.classList.add('text-red-500', 'pulse'); }
-            else if (gameState.timeLeft > 60 && timerDisplay.classList.contains('text-red-500')) { timerDisplay.classList.remove('text-red-500', 'pulse'); timerDisplay.classList.add('text-yellow-400'); }
-        }
-        function updateScoreDisplay() { scoreDisplay.textContent = gameState.score; }
-        function updateProgressDisplay() { progressDisplay.textContent = `${gameState.completedCases}/${TOTAL_CASES}`; }
+        // Game functions
+        function startGame() {
+            document.getElementById('welcome-section').classList.add('hidden');
+            document.getElementById('game-section').classList.remove('hidden');
+            document.getElementById('game-section').classList.add('fade-in');
+            initializeTrail();
+            updateStats();
 
-        function unlockRoom(roomNumber) {
-            if (roomNumber > TOTAL_CASES) return;
-            const room = document.getElementById(`room-${roomNumber}`); const status = document.getElementById(`status-${roomNumber}`);
-            if (room && status) { room.classList.remove('locked'); status.textContent = '🔓'; status.classList.remove('bg-gray-600'); status.classList.add('bg-green-600'); console.log(`Sala ${roomNumber} desbloqueada.`); }
-        }
+            // (CÓDIGO ADICIONADO) - Toca a música de fundo
+            sounds.backgroundMusic.play();
+        }
 
-        function enterRoom(roomNumber) {
-            const room = document.getElementById(`room-${roomNumber}`);
-            if (!room || room.classList.contains('locked')) return;
-            // Verifica se jogoIniciado é true
-            if (!jogoIniciado) { console.warn("Jogo não iniciado."); return; }
+        function initializeTrail() {
+            // ... (sem alterações)
+        }
 
-            console.log(`Entrando na sala ${roomNumber}`);
-            tocarSom('som-click');
-            gameState.currentCase = roomNumber;
+        function spinRoulette() {
+            if (isSpinning || gameFinished) return;
 
-            document.querySelectorAll('.case-content').forEach(el => el.classList.add('hidden'));
-            waitingMessage.classList.add('hidden');
+            // (CÓDIGO ADICIONADO) - Toca o som de rolar o dado
+            sounds.diceRoll.play();
+            
+            isSpinning = true;
+            const roulette = document.getElementById('roulette');
+            const statusText = document.getElementById('roulette-status');
+            
+            statusText.textContent = 'Girando...';
+            
+            // Random rotation between 1080 and 2160 degrees (3-6 full rotations)
+            const rotation = 1080 + Math.random() * 1080;
+            roulette.style.transform = `rotate(${rotation}deg)`;
+            
+            setTimeout(() => {
+                const finalAngle = rotation % 360;
+                const colorIndex = Math.floor(finalAngle / 60);
+                const selectedColor = colors[colorIndex];
+                
+                statusText.textContent = `Cor sorteada: ${getColorName(selectedColor)}! 🎯`;
+                isSpinning = false;
+                
+                setTimeout(() => {
+                    movePlayer();
+                }, 1000);
+            }, 3000);
+        }
 
-            const currentCaseElement = document.getElementById(`case-${roomNumber}`);
-            if (currentCaseElement) { currentCaseElement.classList.remove('hidden'); currentCaseElement.classList.add('fade-in'); showCurrentPuzzle(roomNumber); }
-            else { console.error(`Elemento do caso ${roomNumber} não encontrado!`); showWaitingMessage(); }
-        }
+        function getColorName(color) {
+            // ... (sem alterações)
+        }
 
-        function showCurrentPuzzle(caseNum) {
-            const currentPuzzNum = currentPuzzle[caseNum];
-            const totalPuzzlesInCase = PUZZLES_PER_CASE[caseNum];
-            console.log(`Mostrando Puzzle ${currentPuzzNum}/${totalPuzzlesInCase} do Caso ${caseNum}`);
+        function movePlayer() {
+            if (playerPosition >= 19) {
+                finishGame();
+                return;
+            }
+            
+            // (CÓDIGO ADICIONADO) - Toca o som de movimento
+            sounds.move.play();
+            
+            // Remove current position
+            document.getElementById(`house-${playerPosition}`).classList.remove('current');
+            
+            // Move to next position
+            playerPosition++;
+            const newHouse = document.getElementById(`house-${playerPosition}`);
+            newHouse.classList.add('current');
+            
+            // Move pawn
+            const pawn = document.getElementById('player-pawn');
+            newHouse.appendChild(pawn);
+            
+            updateStats();
+            
+            setTimeout(() => {
+                showQuestion();
+            }, 800);
+        }
 
-            document.querySelectorAll(`#case-${caseNum} .question-block`).forEach(el => el.classList.add('hidden'));
-            const successMsgElement = document.querySelector(`#success-${caseNum}`);
-            if(successMsgElement) successMsgElement.classList.add('hidden');
+        function showQuestion() {
+            // ... (sem alterações)
+        }
 
-            const puzzleToShow = document.querySelector(`#case-${caseNum} .question-block:nth-of-type(${currentPuzzNum})`);
+        function selectModalAnswer(answerIndex, buttonElement) {
+            // ... (sem alterações)
+        }
 
-            if (puzzleToShow) {
-                puzzleToShow.classList.remove('hidden');
-                puzzleToShow.classList.add('fade-in');
-                puzzleToShow.querySelectorAll('.answer-btn').forEach(btn => {
-                    btn.disabled = false;
-                    btn.classList.remove('bg-green-600', 'bg-red-600', 'shake');
-                    btn.classList.add('bg-gray-700');
-                    btn.innerHTML = btn.innerHTML.replace(' ✅', '').replace(' ❌', '');
-                });
-                const oldFeedback = puzzleToShow.querySelector('.feedback-text');
-                if(oldFeedback) oldFeedback.remove();
-            } else if (currentPuzzNum > totalPuzzlesInCase) {
-                console.log(`Puzzles do caso ${caseNum} concluídos, mostrando sucesso.`);
-                if (successMsgElement) {
-                    const buttonInSuccess = successMsgElement.querySelector('button');
-                    if(buttonInSuccess){
-                        buttonInSuccess.className = '';
-                        buttonInSuccess.classList.add('px-6', 'py-3', 'rounded-lg', 'font-bold', 'mt-4');
-                        if(caseNum === TOTAL_CASES) { buttonInSuccess.classList.add('bg-yellow-600', 'hover:bg-yellow-700', 'finish-button'); }
-                        else { buttonInSuccess.classList.add('bg-green-600', 'hover:bg-green-700', 'next-button'); }
-                    }
-                    successMsgElement.classList.remove('hidden');
-                    successMsgElement.classList.add('bg-green-900', 'bg-opacity-50', 'rounded-xl', 'p-6', 'border', 'border-green-500', 'text-center', 'fade-in');
-                } else { console.error(`Mensagem de sucesso ${caseNum} não encontrada!`); }
-            } else { console.error(`Puzzle ${currentPuzzNum} do caso ${caseNum} não encontrado!`); }
-        }
+        function confirmAnswer() {
+            if (selectedAnswer === null) return;
+            
+            document.getElementById('question-modal').classList.add('hidden');
+            questionsAnswered++;
+            
+            const isCorrect = selectedAnswer === currentQuestion.correct;
+            
+            if (isCorrect) {
+                // (CÓDIGO ADICIONADO) - Toca som de acerto
+                sounds.coin.play(); 
+                stars++;
+                showStarEffect();
+                document.getElementById('roulette-status').textContent = 'Resposta correta! Você ganhou uma estrela! ⭐';
+            } else {
+                // (CÓDIGO ADICIONADO) - Toca som de erro
+                sounds.error.play();
+                showBombEffect();
+                document.getElementById('roulette-status').textContent = 'Resposta incorreta! Cuidado com a bomba! 💣';
+            }
+            
+            updateStats();
+            
+            setTimeout(() => {
+                if (playerPosition >= 19 || questionsAnswered >= gameData.length) {
+                    finishGame();
+                } else {
+                    document.getElementById('roulette-status').textContent = 'Gire a roleta novamente!';
+                }
+            }, 3000);
+        }
 
-        function showWaitingMessage() {
-            document.querySelectorAll('.case-content').forEach(el => el.classList.add('hidden'));
-            waitingMessage.classList.remove('hidden');
-            waitingMessage.classList.add('fade-in');
-            console.log("Mostrando mensagem de espera.");
-        }
+        // Fear House Functions
+        function showFearHouse(fearIndex) {
+            // ... (sem alterações)
+        }
 
-        // *** FUNÇÃO checkAnswer CORRIGIDA ***
-        function checkAnswer(caseNum, answerChoice, button) {
-            tocarSom('som-click');
-            const currentPuzzNum = currentPuzzle[caseNum];
-            const totalPuzzlesInCase = PUZZLES_PER_CASE[caseNum];
+        let currentFearHouse = null;
+        let selectedFearAnswer = null;
+        let selectedFearSequence = [];
 
-            let questionIndex = 0;
-            for(let i = 1; i < caseNum; i++){ questionIndex += PUZZLES_PER_CASE[i]; }
-            questionIndex += (currentPuzzNum - 1);
+        function selectFearAnswer(answerIndex, buttonElement) {
+            // ... (sem alterações)
+        }
 
-            const questionData = gameQuestions[questionIndex];
+        function addToSequence(index, element) {
+            // ... (sem alterações)
+        }
 
-            if (!questionData) { console.error(`Dados da pergunta não encontrados para caso ${caseNum}, puzzle ${currentPuzzNum}`); return; }
+        function clearSequence() {
+            // ... (sem alterações)
+        }
 
-            const correctAnswerValue = questionData.answer;
-            const puzzleBlock = button.closest('.question-block');
-            const answerButtons = puzzleBlock.querySelectorAll('.answer-btn');
-            answerButtons.forEach(btn => btn.disabled = true);
+        function confirmFearAnswer() {
+            let isCorrect = false;
+            
+            if (currentFearHouse.type === 'password') {
+                isCorrect = selectedFearAnswer === currentFearHouse.correctAnswer;
+            } else if (currentFearHouse.type === 'multiple') {
+                isCorrect = selectedFearAnswer === currentFearHouse.correct;
+            } else if (currentFearHouse.type === 'sequence') {
+                isCorrect = JSON.stringify(selectedFearSequence) === JSON.stringify(currentFearHouse.correctOrder);
+            }
+            
+            const rewardElement = document.getElementById('fear-reward');
+            
+            if (isCorrect) {
+                // (CÓDIGO ADICIONADO) - Toca som de vitória (mais forte)
+                sounds.win.play();
+                rewardElement.innerHTML = `<div class="text-green-400 font-bold mb-2">✅ CORRETO!</div><div>${currentFearHouse.reward}</div>`;
+                stars += 2; // Casas do medo dão mais estrelas
+                showStarEffect();
+                showStarEffect(); // Duplo efeito
+                document.getElementById('roulette-status').textContent = 'Casa do Medo superada! Você ganhou 2 estrelas! ⭐⭐';
+            } else {
+                // (CÓDIGO ADICIONADO) - Toca som de erro
+                sounds.error.play();
+                let correctAnswerText = '';
+                if (currentFearHouse.type === 'password') {
+                    correctAnswerText = `A resposta correta era: <strong>${currentFearHouse.correctAnswer}</strong>`;
+                } else if (currentFearHouse.type === 'multiple') {
+                    correctAnswerText = `A resposta correta era: <strong>${currentFearHouse.answers[currentFearHouse.correct]}</strong>`;
+                } else if (currentFearHouse.type === 'sequence') {
+                    const correctSequence = currentFearHouse.correctOrder.map(index => currentFearHouse.elements[index]).join(' → ');
+                    correctAnswerText = `A ordem correta era: <strong>${correctSequence}</strong>`;
+                }
+                
+                rewardElement.innerHTML = `<div class="text-red-400 font-bold mb-2">❌ INCORRETO!</div><div class="mb-3">${correctAnswerText}</div><div>${currentFearHouse.reward}</div>`;
+                showBombEffect();
+                document.getElementById('roulette-status').textContent = 'Falhou na Casa do Medo! O terror continua... 💀';
+            }
+            
+            rewardElement.classList.remove('hidden');
+            document.getElementById('fear-confirm').classList.add('hidden');
+            document.getElementById('fear-continue').classList.remove('hidden');
+            
+            updateStats();
+        }
 
-            const oldFeedback = puzzleBlock.querySelector('.feedback-text');
-            if (oldFeedback) oldFeedback.remove();
+        function continueFearGame() {
+            // ... (sem alterações)
+        }
 
-            if (answerChoice === correctAnswerValue) {
-                // Correto
-                console.log(`Caso ${caseNum}, Puzzle ${currentPuzzNum}: Correto!`);
-                tocarSom('som-correto');
-                button.classList.remove('bg-gray-700');
-                const colorsHover = ['blue', 'red', 'purple', 'teal', 'yellow'];
-                 // Remove o hover específico da sala ANTES de adicionar o verde
-                button.classList.remove(`hover:bg-${colorsHover[caseNum-1]}-600`);
-                button.classList.add('bg-green-600');
-                button.innerHTML += ' ✅';
-                gameState.score += 100;
+        function showStarEffect() {
+            // ... (sem alterações)
+        }
 
-                setTimeout(() => {
-                    // Verifica se foi o último puzzle DESTA sala
-                    if (currentPuzzNum < totalPuzzlesInCase) {
-                        currentPuzzle[caseNum]++;
-                        showCurrentPuzzle(caseNum);
-                    } else {
-                        // Último puzzle da sala concluído, mostra mensagem de sucesso
-                        console.log(`Último puzzle do caso ${caseNum} concluído.`);
-                        puzzleBlock.classList.add('hidden'); // Esconde o puzzle atual
-                        // *** CORREÇÃO: Mostra a div de sucesso DIRETAMENTE ***
-                        const successMessage = document.getElementById(`success-${caseNum}`);
-                        if(successMessage){
-                            const buttonInSuccess = successMessage.querySelector('button');
-                            if(buttonInSuccess){
-                                buttonInSuccess.className = '';
-                                buttonInSuccess.classList.add('px-6', 'py-3', 'rounded-lg', 'font-bold', 'mt-4');
-                                if(caseNum === TOTAL_CASES) { buttonInSuccess.classList.add('bg-yellow-600', 'hover:bg-yellow-700', 'finish-button'); }
-                                else { buttonInSuccess.classList.add('bg-green-600', 'hover:bg-green-700', 'next-button'); }
-                            }
-                            successMessage.classList.remove('hidden');
-                            successMessage.classList.add('bg-green-900', 'bg-opacity-50', 'rounded-xl', 'p-6', 'border', 'border-green-500', 'text-center', 'fade-in');
-                        } else { console.error(`Mensagem de sucesso ${caseNum} não encontrada!`); }
-                         // *** FIM DA CORREÇÃO ***
-                    }
-                    updateScoreDisplay();
-                }, 1000);
+        function showBombEffect() {
+            // ... (sem alterações)
+        }
 
-            } else {
-                 // Incorreto
-                 console.log(`Caso ${caseNum}, Puzzle ${currentPuzzNum}: Incorreto.`);
-                 tocarSom('som-incorreto');
-                 button.classList.remove('bg-gray-700');
-                 const colorsHover = ['blue', 'red', 'purple', 'teal', 'yellow'];
-                 button.classList.remove(`hover:bg-${colorsHover[caseNum-1]}-600`);
-                 button.classList.add('bg-red-600', 'shake');
-                 button.innerHTML += ' ❌';
-                 gameState.score = Math.max(0, gameState.score - 25);
+        function updateStats() {
+            // ... (sem alterações)
+        }
 
-                 const feedbackP = document.createElement('p');
-                 feedbackP.textContent = `Explicação: ${questionData.feedback}`;
-                 feedbackP.classList.add('text-red-300', 'mt-3', 'text-sm', 'fade-in', 'feedback-text');
-                 button.parentElement.insertAdjacentElement('afterend', feedbackP);
+        function finishGame() {
+            gameFinished = true;
+            document.getElementById('game-section').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+            document.getElementById('results-section').classList.add('fade-in');
+            
+            // (CÓDIGO ADICIONADO) - Para a música e toca som de vitória final
+            sounds.backgroundMusic.pause();
+            sounds.win.play();
 
-                 setTimeout(() => {
-                    answerButtons.forEach(btn => {
-                        btn.disabled = false;
-                        btn.classList.remove('shake', 'bg-red-600', 'bg-green-600');
-                         btn.classList.add('bg-gray-700');
-                         const colors = ['blue', 'red', 'purple', 'teal', 'yellow'];
-                         // Garante que só adiciona UMA classe de hover
-                         btn.classList.remove(...colors.map(c => `hover:bg-${c}-600`));
-                         btn.classList.add(`hover:bg-${colors[caseNum-1]}-600`);
-                        btn.innerHTML = btn.innerHTML.replace(' ✅', '').replace(' ❌', '');
-                    });
-                    if(feedbackP) feedbackP.remove();
-                 }, 3000);
-                 updateScoreDisplay();
-            }
-        }
+            displayResults();
+        }
 
-        function completeCase(caseNum) {
-            console.log(`completeCase(${caseNum}) chamada.`);
-            tocarSom('som-correto');
-            gameState.completedCases++;
-            updateProgressDisplay();
+        function displayResults() {
+            // ... (sem alterações)
+        }
 
-            const status = document.getElementById(`status-${caseNum}`);
-            const room = document.getElementById(`room-${caseNum}`);
-            if (status && room) {
-                status.textContent = '✅';
-                status.classList.remove('bg-green-600');
-                status.classList.add('bg-blue-600');
-                room.classList.add('opacity-70');
-                room.onclick = null;
-                 console.log(`Status e clique da Sala ${caseNum} atualizados.`);
-            } else { console.error(`Erro ao encontrar elementos da Sala ${caseNum}.`); }
+        function restartGame() {
+            // (CÓDIGO ADICIONADO) - Para a música, reinicia e toca de novo
+            sounds.backgroundMusic.pause();
+            sounds.backgroundMusic.currentTime = 0;
+            sounds.backgroundMusic.play();
 
-            if (gameState.completedCases < TOTAL_CASES) {
-                 console.log(`Desbloqueando Sala ${caseNum + 1} e mostrando espera.`);
-                unlockRoom(caseNum + 1);
-                showWaitingMessage();
-            } else {
-                 console.log("Todas as salas completas. Chamando gameOver(true).");
-                gameOver(true);
-            }
-        }
+            playerPosition = 0;
+            stars = 0;
+            questionsAnswered = 0;
+            currentQuestion = null;
+            selectedAnswer = null;
+            isSpinning = false;
+            gameFinished = false;
+            
+            document.getElementById('results-section').classList.add('hidden');
+            document.getElementById('game-section').classList.remove('hidden');
+            document.getElementById('roulette-status').textContent = 'Clique na roleta para começar!';
+            
+            // Reset roulette rotation
+            document.getElementById('roulette').style.transform = 'rotate(0deg)';
+            
+            initializeTrail();
+            updateStats();
+        }
 
-        function gameOver(isVictory) {
-            console.log(`Fim de jogo. Vitória: ${isVictory}`);
-            clearInterval(gameState.timer);
-            gameState.gameStarted = false;
-            jogoIniciado = false;
+        function showResources() {
+            // ... (sem alterações)
+        }
 
-            if (isVictory) {
-                tocarSom('som-vitoria');
-                gameBoard.classList.add('hidden');
-                victoryScreen.classList.remove('hidden');
-                victoryScreen.classList.add('fade-in');
+        function backToWelcome() {
+            // (CÓDIGO ADICIONADO) - Para a música de fundo e reinicia o tempo dela
+            sounds.backgroundMusic.pause();
+            sounds.backgroundMusic.currentTime = 0;
 
-                const timeTaken = INITIAL_TIME - gameState.timeLeft;
-                const minutes = Math.floor(timeTaken / 60);
-                const seconds = timeTaken % 60;
-                const timeBonus = Math.max(0, gameState.timeLeft * 2);
-                gameState.score += timeBonus;
+            document.getElementById('resources-section').classList.add('hidden');
+            document.getElementById('game-section').classList.add('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+            document.getElementById('welcome-section').classList.remove('hidden');
+            
+            // Reset game
+            playerPosition = 0;
+            stars = 0;
+            questionsAnswered = 0;
+            currentQuestion = null;
+            selectedAnswer = null;
+            isSpinning = false;
+            gameFinished = false;
+        }
 
-                document.getElementById('final-time').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                document.getElementById('final-score').textContent = gameState.score;
-
-            } else {
-                tocarSom('som-gameover');
-                alert('⏰ Tempo esgotado! Você não conseguiu completar a jornada a tempo. Tente novamente!');
-                restartGame();
-            }
-        }
-
-        function restartGame() {
-            console.log("Reiniciando o jogo...");
-            tocarSom('som-click');
-            clearInterval(gameState.timer);
-
-            victoryScreen.classList.add('hidden');
-            gameBoard.classList.add('hidden');
-            introScreen.classList.remove('hidden');
-
-            timerDisplay.textContent = `${Math.floor(INITIAL_TIME / 60).toString().padStart(2, '0')}:${(INITIAL_TIME % 60).toString().padStart(2, '0')}`;
-            timerDisplay.classList.remove('text-red-500', 'pulse'); timerDisplay.classList.add('text-yellow-400');
-            scoreDisplay.textContent = '0'; progressDisplay.textContent = `0/${TOTAL_CASES}`;
-
-            for (let i = 1; i <= TOTAL_CASES; i++) {
-                const room = document.getElementById(`room-${i}`); const status = document.getElementById(`status-${i}`);
-                if (room && status) {
-                    room.classList.remove('opacity-70'); room.onclick = () => enterRoom(i);
-                    if (i > 1) { room.classList.add('locked'); status.textContent = '🔒'; status.classList.remove('bg-green-600', 'bg-blue-600'); status.classList.add('bg-gray-600'); }
-                    else { room.classList.remove('locked'); status.textContent = '🔒'; status.classList.remove('bg-green-600', 'bg-blue-600'); status.classList.add('bg-gray-600'); }
-                }
-            }
-
-            document.querySelectorAll('.case-content').forEach(el => el.classList.add('hidden'));
-            showWaitingMessage();
-
-             document.querySelectorAll('.answer-btn').forEach(btn => {
-                btn.disabled = false; btn.classList.remove('bg-green-600', 'bg-red-600', 'shake'); btn.classList.add('bg-gray-700');
-                 const caseNumStr = btn.closest('.case-content')?.id.split('-')[1];
-                 if(caseNumStr) {
-                     const caseNum = parseInt(caseNumStr); const colors = ['blue', 'red', 'purple', 'teal', 'yellow'];
-                     // Remove todas as cores de hover antes de adicionar a correta
-                     btn.classList.remove(...colors.map(c => `hover:bg-${c}-600`));
-                     if(caseNum >=1 && caseNum <= colors.length) { btn.classList.add(`hover:bg-${colors[caseNum-1]}-600`); }
-                 }
-                btn.innerHTML = btn.innerHTML.replace(' ✅', '').replace(' ❌', '');
-            });
-            document.querySelectorAll('.feedback-text').forEach(p => p.remove());
-            document.querySelectorAll('[id^="puzzle-2-case-"],[id^="puzzle-3-case-"]').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.success-message').forEach(el => el.classList.add('hidden'));
-
-            initializeGameState(); // Reseta o estado
-            console.log("Jogo reiniciado. Pronto para começar.");
-        }
-
-        // --- Inicialização ---
-        console.log("Adicionando listeners...");
-        if (playButton) playButton.addEventListener('click', tocarVideoIntro); else console.error("ERRO CRÍTICO: Botão #play-video não encontrado!");
-        if (introVideo) introVideo.addEventListener('ended', handleVideoEnd); else console.error("ERRO CRÍTICO: Vídeo #intro-video não encontrado!");
-        if (skipButton) skipButton.addEventListener('click', handleVideoEnd); else console.error("ERRO CRÍTICO: Botão #skip-video não encontrado!");
-        const restartBtnVictory = victoryScreen ? victoryScreen.querySelector('button') : null;
-        if(restartBtnVictory) restartBtnVictory.addEventListener('click', restartGame); else console.warn("Botão de reiniciar não encontrado na tela de vitória!");
-        initializeGameState(); // Inicializa ao carregar
-        updateUI();
-        console.log("Script carregado e pronto.");
-
-    </script>
-</body>
-
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... (sem alterações)
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994e5570e7b79096',t:'MTc2MTUyNzYzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
