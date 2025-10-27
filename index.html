@@ -1,634 +1,986 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexão Corpo: Saúde Reprodutiva, Sexualidade e Saúde Íntima</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* O teu CSS (styles) completo fica aqui... (sem alterações) */
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conexão Corpo: Saúde Reprodutiva, Sexualidade e Saúde Íntima</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
         body {
-            box-sizing: border-box;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 10% { transform: translateX(-5px); } 20% { transform: translateX(5px); } 30% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 50% { transform: translateX(0); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .pulse { animation: pulse 2s infinite; }
-        .shake { animation: shake 0.5s ease-in-out; }
-        .fade-in { animation: fadeIn 0.5s ease; }
-        .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
-        .neon-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 0 30px rgba(255, 107, 107, 0.3); }
-        .locked { filter: grayscale(80%) brightness(0.5); pointer-events: none; cursor: not-allowed; }
-        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out; }
-        #video-container video { width: 100%; height: 100%; object-fit: cover; }
-        #play-video { position: absolute; z-index: 10001; font-size: 80px; color: white; background: rgba(0, 0, 0, 0.4); border: 3px solid white; border-radius: 50%; width: 120px; height: 120px; line-height: 120px; text-align: center; cursor: pointer; transition: all 0.3s; }
-        #play-video:hover { background: rgba(255, 107, 107, 0.5); transform: scale(1.1); }
-        #skip-video { position: absolute; bottom: 30px; right: 30px; padding: 12px 25px; font-size: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); color: white; border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 10px; cursor: pointer; z-index: 10000; transition: all 0.3s; }
-        #skip-video:hover { background: rgba(255, 255, 255, 0.4); border-color: white; }
-        #video-container.hidden { opacity: 0; pointer-events: none; }
-        .answer-btn { white-space: normal; text-align: left; line-height: 1.4; padding-top: 0.75rem; padding-bottom: 0.75rem; }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
-        
-        /* Trilha Styles */
-        .trail-path { 
-            display: grid; 
-            grid-template-columns: repeat(10, 1fr); 
-            gap: 8px; 
-            max-width: 800px; 
-            margin: 0 auto; 
-        }
-        .trail-house { 
-            width: 60px; 
-            height: 60px; 
-            border: 3px solid #fff; 
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 24px; 
-            position: relative; 
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .trail-house:hover { transform: scale(1.1); }
-        .trail-house.current { border-color: #ffd700; box-shadow: 0 0 20px #ffd700; }
-        
-        /* Peão */
-        .pawn { 
-            position: absolute; 
-            top: -15px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            font-size: 30px; 
-            z-index: 10;
-            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        /* Roleta */
-        .roulette { 
-            width: 200px; 
-            height: 200px; 
-            border-radius: 50%; 
-            position: relative; 
-            margin: 0 auto; 
-            cursor: pointer;
-            transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        .roulette-section { 
-    S         position: absolute; 
-            width: 50%; 
-            height: 50%; 
-            transform-origin: 100% 100%; 
-        }
-        .roulette-pointer { 
-            position: absolute; 
-            top: -10px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 0; 
-            height: 0; 
-            border-left: 15px solid transparent; 
-            border-right: 15px solid transparent; 
-            border-top: 30px solid #ffd700; 
-            z-index: 20;
-        }
-        
-        /* Efeitos */
-        @keyframes starExplosion {
-            0% { transform: scale(0) rotate(0deg); opacity: 1; }
-            50% { transform: scale(1.5) rotate(180deg); opacity: 0.8; }
-            100% { transform: scale(2) rotate(360deg); opacity: 0; }
-        }
-        @keyframes bombExplosion {
-            0% { transform: scale(0); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.9; }
-            100% { transform: scale(3); opacity: 0; }
-        }
-        .star-effect { 
-            position: fixed; 
-            font-size: 60px; 
-            z-index: 1000; 
-            animation: starExplosion 2s ease-out forwards; 
-            pointer-events: none;
-        }
-        .bomb-effect { 
-            position: fixed; 
-            font-size: 80px; 
-            z-index: 1000; 
-            animation: bombExplosion 1.5s ease-out forwards; 
-            pointer-events: none;
-        }
-        
-        /* Cores das casas */
-        .house-red { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
-        .house-blue { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
-        .house-green { background: linear-gradient(135deg, #95e1d3, #fce38a); }
-        .house-purple { background: linear-gradient(135deg, #a8edea, #fed6e3); }
-        .house-orange { background: linear-gradient(135deg, #ffeaa7, #fab1a0); }
-        .house-pink { background: linear-gradient(135deg, #fd79a8, #fdcb6e); }
-        
-        /* Casa do Medo */
-        .house-fear { 
-            background: linear-gradient(135deg, #2c1810, #8b0000, #000000); 
-            border-color: #ff0000 !important;
-            box-shadow: 0 0 15px #ff0000, inset 0 0 15px rgba(255, 0, 0, 0.3);
-            animation: fearPulse 2s infinite;
-        }
-        .house-fear.current { 
-            border-color: #ffd700 !important; 
-            box-shadow: 0 0 20px #ffd700, 0 0 30px #ff0000; 
-        }
-        
-        @keyframes fearPulse {
-            0%, 100% { box-shadow: 0 0 15px #ff0000, inset 0 0 15px rgba(255, 0, 0, 0.3); }
-            50% { box-shadow: 0 0 25px #ff0000, inset 0 0 25px rgba(255, 0, 0, 0.5); }
-        }
-    </style>
+            box-sizing: border-box;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10% { transform: translateX(-5px); } 20% { transform: translateX(5px); } 30% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 50% { transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .pulse { animation: pulse 2s infinite; }
+        .shake { animation: shake 0.5s ease-in-out; }
+        .fade-in { animation: fadeIn 0.5s ease; }
+        .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        .neon-glow { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), 0 0 30px rgba(255, 107, 107, 0.3); }
+        .locked { filter: grayscale(80%) brightness(0.5); pointer-events: none; cursor: not-allowed; }
+        #video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.5s ease-out; }
+        #video-container video { width: 100%; height: 100%; object-fit: cover; }
+        #play-video { position: absolute; z-index: 10001; font-size: 80px; color: white; background: rgba(0, 0, 0, 0.4); border: 3px solid white; border-radius: 50%; width: 120px; height: 120px; line-height: 120px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        #play-video:hover { background: rgba(255, 107, 107, 0.5); transform: scale(1.1); }
+        #skip-video { position: absolute; bottom: 30px; right: 30px; padding: 12px 25px; font-size: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); color: white; border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 10px; cursor: pointer; z-index: 10000; transition: all 0.3s; }
+        #skip-video:hover { background: rgba(255, 255, 255, 0.4); border-color: white; }
+        #video-container.hidden { opacity: 0; pointer-events: none; }
+        .answer-btn { white-space: normal; text-align: left; line-height: 1.4; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+        
+        /* Trilha Styles */
+        .trail-path { 
+            display: grid; 
+            grid-template-columns: repeat(10, 1fr); 
+            gap: 8px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .trail-house { 
+            width: 60px; 
+            height: 60px; 
+            border: 3px solid #fff; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 24px; 
+            position: relative; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .trail-house:hover { transform: scale(1.1); }
+        .trail-house.current { border-color: #ffd700; box-shadow: 0 0 20px #ffd700; }
+        
+        /* Peão */
+        .pawn { 
+            position: absolute; 
+            top: -15px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 30px; 
+            z-index: 10;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* Roleta */
+        .roulette { 
+            width: 200px; 
+            height: 200px; 
+            border-radius: 50%; 
+            position: relative; 
+            margin: 0 auto; 
+            cursor: pointer;
+            transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .roulette-section { 
+            position: absolute; 
+            width: 50%; 
+            height: 50%; 
+            transform-origin: 100% 100%; 
+        }
+        .roulette-pointer { 
+            position: absolute; 
+            top: -10px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 0; 
+            height: 0; 
+            border-left: 15px solid transparent; 
+            border-right: 15px solid transparent; 
+            border-top: 30px solid #ffd700; 
+            z-index: 20;
+        }
+        
+        /* Efeitos */
+        @keyframes starExplosion {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.5) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(2) rotate(360deg); opacity: 0; }
+        }
+        @keyframes bombExplosion {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.9; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+        .star-effect { 
+            position: fixed; 
+            font-size: 60px; 
+            z-index: 1000; 
+            animation: starExplosion 2s ease-out forwards; 
+            pointer-events: none;
+        }
+        .bomb-effect { 
+            position: fixed; 
+            font-size: 80px; 
+            z-index: 1000; 
+            animation: bombExplosion 1.5s ease-out forwards; 
+            pointer-events: none;
+        }
+        
+        /* Cores das casas */
+        .house-red { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .house-blue { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .house-green { background: linear-gradient(135deg, #95e1d3, #fce38a); }
+        .house-purple { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+        .house-orange { background: linear-gradient(135deg, #ffeaa7, #fab1a0); }
+        .house-pink { background: linear-gradient(135deg, #fd79a8, #fdcb6e); }
+        
+        /* Casa do Medo */
+        .house-fear { 
+            background: linear-gradient(135deg, #2c1810, #8b0000, #000000); 
+            border-color: #ff0000 !important;
+            box-shadow: 0 0 15px #ff0000, inset 0 0 15px rgba(255, 0, 0, 0.3);
+            animation: fearPulse 2s infinite;
+        }
+        .house-fear.current { 
+            border-color: #ffd700 !important; 
+            box-shadow: 0 0 20px #ffd700, 0 0 30px #ff0000; 
+        }
+        
+        @keyframes fearPulse {
+            0%, 100% { box-shadow: 0 0 15px #ff0000, inset 0 0 15px rgba(255, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 25px #ff0000, inset 0 0 25px rgba(255, 0, 0, 0.5); }
+        }
+    </style>
 </head>
 <body class="gradient-bg min-h-full text-white">
 
-        <div id="video-container">
-        <div id="play-video" onclick="playVideo()">▶</div>
-        <button id="skip-video" onclick="skipVideo()">Pular Vídeo</button>
-        <video id="intro-video" width="640" height="360" controls playsinline style="display: none;">
-            <source src="video/1000007047.mp4" type="video/mp4">
-            O teu navegador não suporta a tag de vídeo.
-        </video>
-    </div>
+    <!-- Video Introduction -->
+    <div id="video-container">
+        <div id="play-video" onclick="playVideo()">▶</div>
+        <button id="skip-video" onclick="skipVideo()">Pular Vídeo</button>
+        <video id="intro-video" width="640" height="360" controls playsinline style="display: none;">
+            <source src="video/1000007047.mp4" type="video/mp4">
+            O teu navegador não suporta a tag de vídeo.
+        </video>
+    </div>
 
-        <main class="container mx-auto px-4 py-8">
-                <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4 neon-glow">
-                🌸 Conexão Corpo 🌸
-            </h1>
-            <p class="text-xl md:text-2xl text-blue-200 mb-6">
-                Saúde Reprodutiva, Sexualidade e Saúde Íntima
-            </p>
-            <div class="w-24 h-1 bg-gradient-to-r from-pink-400 to-blue-400 mx-auto rounded-full"></div>
-        </header>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 neon-glow">
+                🌸 Conexão Corpo 🌸
+            </h1>
+            <p class="text-xl md:text-2xl text-blue-200 mb-6">
+                Saúde Reprodutiva, Sexualidade e Saúde Íntima
+            </p>
+            <div class="w-24 h-1 bg-gradient-to-r from-pink-400 to-blue-400 mx-auto rounded-full"></div>
+        </header>
 
-                <section id="welcome-section" class="mb-12">
-            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 card-hover">
-                <h2 class="text-3xl font-bold mb-6 text-center">Bem-vinda ao seu espaço de conhecimento! 💕</h2>
-                <p class="text-lg text-center mb-8 leading-relaxed">
-                    Este é um espaço seguro e educativo para aprender sobre saúde reprodutiva, 
-                    sexualidade e cuidados íntimos. Vamos juntas descobrir informações importantes 
-                    para o seu bem-estar!
-                </p>
-                <div class="text-center">
-                    <button onclick="startGame()" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105 neon-glow">
-                        Começar Jornada de Aprendizado ✨
-                    </button>
-                </div>
-            </div>
-        </section>
+        <!-- Welcome Section -->
+        <section id="welcome-section" class="mb-12">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 card-hover">
+                <h2 class="text-3xl font-bold mb-6 text-center">Bem-vinda ao seu espaço de conhecimento! 💕</h2>
+                <p class="text-lg text-center mb-8 leading-relaxed">
+                    Este é um espaço seguro e educativo para aprender sobre saúde reprodutiva, 
+                    sexualidade e cuidados íntimos. Vamos juntas descobrir informações importantes 
+                    para o seu bem-estar!
+                </p>
+                <div class="text-center">
+                    <button onclick="startGame()" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105 neon-glow">
+                        Começar Jornada de Aprendizado ✨
+                    </button>
+                </div>
+            </div>
+        </section>
 
-                <section id="game-section" class="hidden">
-                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6">
-                <div class="flex justify-between items-center text-center">
-                    <div>
-                        <div class="text-3xl mb-2">⭐</div>
-                        <div class="text-xl font-bold" id="stars-count">0</div>
-                        <div class="text-sm">Estrelas</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl mb-2">🏠</div>
-                        <div class="text-xl font-bold" id="position-count">1</div>
-                        <div class="text-sm">Posição</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl mb-2">❓</div>
-                        <div class="text-xl font-bold" id="questions-answered">0</div>
-                        <div class="text-sm">Perguntas</div>
-                    </div>
-                </div>
-            </div>
+        <!-- Game Section -->
+        <section id="game-section" class="hidden">
+            <!-- Game Stats -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 mb-6">
+                <div class="flex justify-between items-center text-center">
+                    <div>
+                        <div class="text-3xl mb-2">⭐</div>
+                        <div class="text-xl font-bold" id="stars-count">0</div>
+                        <div class="text-sm">Estrelas</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl mb-2">🏠</div>
+                        <div class="text-xl font-bold" id="position-count">1</div>
+                        <div class="text-sm">Posição</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl mb-2">❓</div>
+                        <div class="text-xl font-bold" id="questions-answered">0</div>
+                        <div class="text-sm">Perguntas</div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 mb-6 text-center">
-                <h3 class="text-2xl font-bold mb-6">Gire a Roleta da Sorte! 🎯</h3>
-                <p class="text-lg mb-6 text-blue-200">
-                    Aqui temos diversas perguntas do nível fácil ao difícil que estão presentes em cada casa
-                </p>
-                <div class="relative inline-block">
-                    <div class="roulette-pointer"></div>
-                    <div id="roulette" class="roulette" onclick="spinRoulette()">
-                        <div class="roulette-section house-red" style="transform: rotate(0deg);"></div>
-                        <div class="roulette-section house-blue" style="transform: rotate(60deg);"></div>
-                        <div class="roulette-section house-green" style="transform: rotate(120deg);"></div>
-                        <div class="roulette-section house-purple" style="transform: rotate(180deg);"></div>
-                        <div class="roulette-section house-orange" style="transform: rotate(240deg);"></div>
-                        <div class="roulette-section house-pink" style="transform: rotate(300deg);"></div>
-                    </div>
-                </div>
-                <p class="mt-4 text-lg" id="roulette-status">Clique na roleta para começar!</p>
-            </div>
+            <!-- Roleta -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 mb-6 text-center">
+                <h3 class="text-2xl font-bold mb-6">Gire a Roleta da Sorte! 🎯</h3>
+                <p class="text-lg mb-6 text-blue-200">
+                    Aqui temos diversas perguntas do nível fácil ao difícil que estão presentes em cada casa
+                </p>
+                <div class="relative inline-block">
+                    <div class="roulette-pointer"></div>
+                    <div id="roulette" class="roulette" onclick="spinRoulette()">
+                        <div class="roulette-section house-red" style="transform: rotate(0deg);"></div>
+                        <div class="roulette-section house-blue" style="transform: rotate(60deg);"></div>
+                        <div class="roulette-section house-green" style="transform: rotate(120deg);"></div>
+                        <div class="roulette-section house-purple" style="transform: rotate(180deg);"></div>
+                        <div class="roulette-section house-orange" style="transform: rotate(240deg);"></div>
+                        <div class="roulette-section house-pink" style="transform: rotate(300deg);"></div>
+                    </div>
+                </div>
+                <p class="mt-4 text-lg" id="roulette-status">Clique na roleta para começar!</p>
+            </div>
 
-                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 mb-6">
-                <h3 class="text-2xl font-bold mb-6 text-center">Trilha do Conhecimento 🛤️</h3>
-                <div class="trail-path" id="trail-path">
-                                    </div>
-            </div>
+            <!-- Trilha -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 mb-6">
+                <h3 class="text-2xl font-bold mb-6 text-center">Trilha do Conhecimento 🛤️</h3>
+                <div class="trail-path" id="trail-path">
+                    <!-- Casas serão geradas dinamicamente -->
+                </div>
+            </div>
 
-                        <div id="question-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-                <div class="bg-white bg-opacity-95 backdrop-blur-lg rounded-2xl p-8 max-w-2xl mx-4 text-gray-800">
-                    <h3 id="modal-question-text" class="text-xl font-bold mb-6"></h3>
-                    <div id="modal-answers-container" class="space-y-3 mb-6"></div>
-                    <div class="text-center">
-                        <button id="confirm-answer" onclick="confirmAnswer()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold disabled:opacity-50" disabled>
-                            Confirmar Resposta
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <!-- Question Modal -->
+            <div id="question-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white bg-opacity-95 backdrop-blur-lg rounded-2xl p-8 max-w-2xl mx-4 text-gray-800">
+                    <h3 id="modal-question-text" class="text-xl font-bold mb-6"></h3>
+                    <div id="modal-answers-container" class="space-y-3 mb-6"></div>
+                    <div class="text-center">
+                        <button id="confirm-answer" onclick="confirmAnswer()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold disabled:opacity-50" disabled>
+                            Confirmar Resposta
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-                        <div id="fear-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
-                <div class="bg-gradient-to-br from-red-900 to-black border-4 border-red-600 rounded-2xl p-8 max-w-2xl mx-4 text-white shadow-2xl" style="box-shadow: 0 0 30px #ff0000;">
-                    <h3 id="fear-title" class="text-2xl font-bold mb-4 text-center text-red-400"></h3>
-                    <p id="fear-question" class="text-lg mb-6 text-center"></p>
-                    <div id="fear-input-container" class="mb-6"></div>
-                    <div id="fear-reward" class="hidden bg-red-800 border border-red-600 rounded-lg p-4 mb-4 text-center"></div>
-                    <div class="text-center">
-                        <button id="fear-confirm" onclick="confirmFearAnswer()" class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold disabled:opacity-50 mr-4" disabled>
-                            Confirmar
-                        </button>
-                        <button id="fear-continue" onclick="continueFearGame()" class="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-semibold hidden">
-                            Continuar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <!-- Fear House Modal -->
+            <div id="fear-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+                <div class="bg-gradient-to-br from-red-900 to-black border-4 border-red-600 rounded-2xl p-8 max-w-2xl mx-4 text-white shadow-2xl" style="box-shadow: 0 0 30px #ff0000;">
+                    <h3 id="fear-title" class="text-2xl font-bold mb-4 text-center text-red-400"></h3>
+                    <p id="fear-question" class="text-lg mb-6 text-center"></p>
+                    <div id="fear-input-container" class="mb-6"></div>
+                    <div id="fear-reward" class="hidden bg-red-800 border border-red-600 rounded-lg p-4 mb-4 text-center"></div>
+                    <div class="text-center">
+                        <button id="fear-confirm" onclick="confirmFearAnswer()" class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold disabled:opacity-50 mr-4" disabled>
+                            Confirmar
+                        </button>
+                        <button id="fear-continue" onclick="continueFearGame()" class="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-semibold hidden">
+                            Continuar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <section id="results-section" class="hidden">
-            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 text-center">
-                <h2 class="text-3xl font-bold mb-6">Parabéns! Você completou o quiz! 🎉</h2>
-                <div class="text-6xl mb-6" id="score-emoji">🌟</div>
-                <p class="text-2xl mb-4">Sua pontuação: <span id="final-score" class="font-bold text-yellow-400"></span></p>
-                <p id="score-message" class="text-lg mb-8"></p>
-                
-                <div class="space-y-4">
-                    <button onclick="restartGame()" class="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105">
-                        Jogar Novamente 🔄
-                    </button>
-                    <button onclick="showResources()" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105 ml-4">
-                        Recursos Educativos 📚
-                    </button>
-                </div>
-            </div>
-        </section>
+        <!-- Results Section -->
+        <section id="results-section" class="hidden">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 text-center">
+                <h2 class="text-3xl font-bold mb-6">Parabéns! Você completou o quiz! 🎉</h2>
+                <div class="text-6xl mb-6" id="score-emoji">🌟</div>
+                <p class="text-2xl mb-4">Sua pontuação: <span id="final-score" class="font-bold text-yellow-400"></span></p>
+                <p id="score-message" class="text-lg mb-8"></p>
+                
+                <div class="space-y-4">
+                    <button onclick="restartGame()" class="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105">
+                        Jogar Novamente 🔄
+                    </button>
+                    <button onclick="showResources()" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300 transform hover:scale-105 ml-4">
+                        Recursos Educativos 📚
+                    </button>
+                </div>
+            </div>
+        </section>
 
-                <section id="resources-section" class="hidden">
-            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8">
-                <h2 class="text-3xl font-bold mb-8 text-center">Recursos Educativos 📚</h2>
-                
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    </div>
+        <!-- Resources Section -->
+        <section id="resources-section" class="hidden">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">Recursos Educativos 📚</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-pink-500 to-purple-600 p-6 rounded-xl card-hover">
+                        <h3 class="text-xl font-bold mb-3">🌸 Saúde Menstrual</h3>
+                        <p class="text-sm mb-4">Informações sobre ciclo menstrual, cólicas e cuidados durante a menstruação.</p>
+                        <button class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Saiba Mais
+                        </button>
+                    </div>
 
-                <div class="text-center mt-8">
-                    <button onclick="backToWelcome()" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300">
-                        ← Voltar ao Início
-                    </button>
-                </div>
-            </div>
-        </section>
-    </main>
+                    <div class="bg-gradient-to-br from-blue-500 to-teal-600 p-6 rounded-xl card-hover">
+                        <h3 class="text-xl font-bold mb-3">🛡️ Prevenção</h3>
+                        <p class="text-sm mb-4">Métodos contraceptivos, prevenção de ISTs e cuidados preventivos.</p>
+                        <button class="bg-white text-teal-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Saiba Mais
+                        </button>
+                    </div>
 
-    <script>
-        // ===================================
-        // ===== 1. CARREGAMENTO DOS ÁUDIOS =====
-        // ===================================
-        // (CÓDIGO ADICIONADO AQUI)
-        const sounds = {
-            backgroundMusic: new Audio('audio/bgm.mp3'),
-            coin: new Audio('audio/coin.wav'),
-            diceRoll: new Audio('audio/dice_roll.ogg'),
-            error: new Audio('audio/error.mp3'),
-            move: new Audio('audio/move.mp3'),
-            win: new Audio('audio/win.wav')
-        };
-        sounds.backgroundMusic.loop = true;
-        sounds.backgroundMusic.volume = 0.5;
-        // ===================================
+                    <div class="bg-gradient-to-br from-green-500 to-emerald-600 p-6 rounded-xl card-hover">
+                        <h3 class="text-xl font-bold mb-3">💚 Bem-estar Íntimo</h3>
+                        <p class="text-sm mb-4">Higiene íntima, autoconhecimento e cuidados diários.</p>
+                        <button class="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Saiba Mais
+                        </button>
+                    </div>
 
+                    <div class="bg-gradient-to-br from-orange-500 to-red-600 p-6 rounded-xl card-hover">
+                        <h3 class="text-xl font-bold mb-3">🤝 Relacionamentos</h3>
+                        <p class="text-sm mb-4">Comunicação, consentimento e relacionamentos saudáveis.</p>
+                        <button class="bg-white text-red-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Saiba Mais
+                        </button>
+                    </div>
 
-        // Game data
-        const gameData = [
-            // ... (sem alterações)
-        ];
+                    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-xl card-hover">
+                        <h3 class="text-xl font-bold mb-3">🏥 Quando Buscar Ajuda</h3>
+                        <p class="text-sm mb-4">Sinais de alerta e quando procurar um profissional de saúde.</p>
+                        <button class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Saiba Mais
+                        </button>
+                    </div>
 
-        // Fear Houses - Casas do Medo
-        const fearHouses = [
-            // ... (sem alterações)
-        ];
+                    <div class="bg-gradient-to-br from-yellow-500 to-orange-600 p-6 rounded-xl card-hover">
+                        <h3 class="text-xl font-bold mb-3">📞 Apoio e Suporte</h3>
+                        <p class="text-sm mb-4">Canais de apoio, linhas de ajuda e recursos de suporte.</p>
+                        <button class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            Saiba Mais
+                        </button>
+                    </div>
+                </div>
 
-        // Game state
-        let playerPosition = 0;
-        let stars = 0;
-        let questionsAnswered = 0;
-        let currentQuestion = null;
-        let selectedAnswer = null;
-        let isSpinning = false;
-        let gameFinished = false;
+                <div class="text-center mt-8">
+                    <button onclick="backToWelcome()" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 px-8 py-4 rounded-full text-xl font-semibold transition-all duration-300">
+                        ← Voltar ao Início
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        const colors = ['red', 'blue', 'green', 'purple', 'orange', 'pink'];
-        const houseEmojis = ['🏠', '🏡', '🏘️', '🏰', '🏯', '🏛️'];
-        const fearHousePositions = [3, 6, 9, 12, 15, 18]; // Posições das casas do medo
-        const fearHouseEmojis = ['💀', '👻', '🔥', '⚡', '🌙', '💥'];
+    <script>
+        // Game data
+        const gameData = [
+            {
+                question: "Cenário 1: Cris está na escola e percebe que já faz mais de 6 horas que colocou seu absorvente. Ela está se sentindo úmida e desconfortável. O que ela deve fazer?",
+                answers: [
+                    "Ignorar a pressa e ir imediatamente ao banheiro trocar o absorvente, lavando as mãos antes e depois",
+                    "Deixar para trocar só depois da próxima aula, pois o absorvente 'ainda aguenta'",
+                    "Esperar até chegar em casa para trocar",
+                    "Usar papel higiênico por cima do absorvente para absorver mais"
+                ],
+                correct: 0,
+                explanation: "Trocar o produto menstrual regularmente (a cada 4 a 6 horas) é essencial. Usar o mesmo produto por tempo excessivo permite que o sangue acumulado se torne um ambiente ideal para a proliferação de bactérias e fungos, aumentando o risco de irritações, assaduras e infecções (como candidíase)."
+            },
+            {
+                question: "Cenário 2: Cris está tomando banho. Para se sentir muito limpa, ela pensa em usar um sabonete líquido perfumado para lavar o interior da vagina (ducha vaginal) e toda a área da vulva. O que é correto fazer?",
+                answers: [
+                    "Usar o sabonete perfumado para lavar a vulva e fazer a ducha vaginal",
+                    "Lavar apenas a parte externa (vulva), usando água e sabonete de sua preferência. Enxaguar a região com água abundante e evitar lavagem interna",
+                    "Fazer ducha vaginal apenas com água",
+                    "Usar produtos específicos para higiene íntima com fragrância"
+                ],
+                correct: 1,
+                explanation: "A vagina é um órgão autolimpante. Lavar a parte interna ou usar sabonetes perfumados desequilibra o pH natural e ácido da vagina. Esse desequilíbrio remove a proteção natural do corpo e aumenta drasticamente o risco de infecções."
+            },
+            {
+                question: "Cenário 3: Cris acabou de trocar seu absorvente. Ele está enrolado em papel higiênico e ela precisa descartá-lo de forma segura e limpa. Qual é a forma correta?",
+                answers: [
+                    "Jogar o absorvente usado no vaso sanitário e dar descarga para 'se livrar' dele",
+                    "Enrolar bem o absorvente e descartá-lo no lixo (lixeira)",
+                    "Deixar o absorvente no banheiro para secar antes de descartar",
+                    "Queimar o absorvente no quintal"
+                ],
+                correct: 1,
+                explanation: "O descarte adequado no lixo comum mantém a infraestrutura sanitária funcionando e é ambientalmente responsável. Sempre embrulhe bem o produto antes do descarte."
+            },
+            {
+                question: "Cenário 4: Cris acabou de usar o banheiro e vai se limpar com o papel higiênico. Ela se lembra que a limpeza deve ser feita em um sentido específico para evitar contaminação. Qual é o correto?",
+                answers: [
+                    "Limpar-se no sentido de trás para frente (do ânus em direção à vulva/uretra)",
+                    "Limpar-se com o papel higiênico no sentido da frente para trás (da vulva/uretra em direção ao ânus)",
+                    "Não importa o sentido, desde que limpe bem",
+                    "Alternar entre os dois sentidos para limpar melhor"
+                ],
+                correct: 1,
+                explanation: "A limpeza 'de frente para trás' é a única forma de evitar que bactérias do ânus (como o E. coli) sejam transportadas para a uretra ou vagina. Esta é uma das principais formas de prevenir Infecções do Trato Urinário (ITU)."
+            },
+            {
+                question: "Cenário 5: Cris vai passar o dia fora e precisa escolher qual calcinha usar: uma de tecido sintético e apertada (linda) ou uma de algodão macia e folgada (confortável). Qual é a melhor escolha?",
+                answers: [
+                    "Escolher a calcinha sintética e apertada porque é mais bonita",
+                    "Escolher a calcinha de algodão, mais confortável",
+                    "Usar as duas, uma por cima da outra",
+                    "Não usar calcinha para deixar a região mais livre"
+                ],
+                correct: 1,
+                explanation: "O algodão permite que a pele respire, mantendo a área seca e saudável. Roupas íntimas folgadas facilitam a circulação de ar, prevenindo o ambiente úmido que favorece infecções fúngicas."
+            }
+        ];
 
-        // Video functions
-        function playVideo() {
-            const video = document.getElementById('intro-video');
-            const playBtn = document.getElementById('play-video');
-            
-            video.style.display = 'block';
-            playBtn.style.display = 'none';
-            video.play();
-            
-            video.onended = function() {
-                skipVideo();
-            };
-        }
+        // Fear Houses - Casas do Medo
+        const fearHouses = [
+            {
+                title: "💻 Computador Corrompido",
+                question: "🔴 SISTEMA CORROMPIDO... Digite a senha (Dica: Tipo de HPV mais comum em verrugas genitais)",
+                type: "password",
+                correctAnswer: "HPV6",
+                reward: "ARQUIVO DESBLOQUEADO: 'A Dra. Helena estava criando um vírus HPV sintético para controle populacional...'"
+            },
+            {
+                title: "🗃️ Gaveta Misteriosa", 
+                question: "🩸 Qual sintoma NÃO é comum em infecções por HPV?",
+                type: "multiple",
+                answers: ["Verrugas genitais", "Febre alta persistente", "Lesões cervicais", "Coceira genital"],
+                correct: 1,
+                reward: "DESCOBERTA: Chave mestra e lista de pacientes 'especiais' para experimentos!"
+            },
+            {
+                title: "🧪 Centrífuga Sinistra",
+                question: "🩸 SANGUE AINDA FRESCO... Qual é o principal método de transmissão do HPV?",
+                type: "multiple", 
+                answers: ["Contato sexual", "Ar", "Água", "Rituais satânicos"],
+                correct: 0,
+                reward: "HORROR: A centrífuga contém amostras de HPV misturadas com DNA não-humano!"
+            },
+            {
+                title: "🔬 Incubadora do Mal",
+                question: "👹 ALGO ESTÁ CRESCENDO DENTRO... Digite o código (Dica: Quantos tipos de HPV de alto risco existem?)",
+                type: "password",
+                correctAnswer: "14",
+                reward: "REVELAÇÃO: Embriões humanos infectados com HPV modificado estão sendo cultivados!"
+            },
+            {
+                title: "🗝️ Cofre Amaldiçoado",
+                question: "⚡ SÍMBOLOS SANGRENTOS... Ordene os tipos de HPV por risco (baixo para alto):",
+                type: "sequence",
+                elements: ["HPV 16", "HPV 6", "HPV 18", "HPV 11"],
+                correctOrder: [1, 3, 0, 2], // HPV 6 → HPV 11 → HPV 16 → HPV 18
+                reward: "DOCUMENTOS MACABROS: Contratos com entidades demoníacas para 'aprimorar' o vírus!"
+            },
+            {
+                title: "⚰️ Mesa de Tortura",
+                question: "🔴 MANCHAS DE SANGUE FRESCO... Qual exame detecta HPV cervical?",
+                type: "multiple",
+                answers: ["Papanicolau", "Raio-X", "Ultrassom", "Exame de sangue"],
+                correct: 0,
+                reward: "DESCOBERTA ATERRORIZANTE: Instrumentos de tortura disfarçados de equipamentos médicos!"
+            },
+            {
+                title: "🌀 Portal Dimensional",
+                question: "👁️ O PORTAL ESTÁ SE ABRINDO... Digite o código final (Dica: Ano da descoberta do HPV)",
+                type: "password",
+                correctAnswer: "1983",
+                reward: "VERDADE FINAL: A Dra. Helena não estava apenas criando vírus... ela estava abrindo portais para outras dimensões!"
+            },
+            {
+                title: "⭕ Círculo de Invocação",
+                question: "👻 VOZES SUSSURRAM... Ordene os elementos do ritual (seguindo as marcas no chão):",
+                type: "sequence",
+                elements: ["Sangue", "Vírus", "Alma", "Carne"],
+                correctOrder: [3, 0, 1, 2], // Carne → Sangue → Vírus → Alma
+                reward: "REVELAÇÃO FINAL: O HPV era apenas o começo... a Dra. Helena estava criando uma praga demoníaca!"
+            }
+        ];
 
-        function skipVideo() {
-            const videoContainer = document.getElementById('video-container');
-            videoContainer.classList.add('hidden');
-            setTimeout(() => {
-                videoContainer.style.display = 'none';
-            }, 500);
-        }
+        // Game state
+        let playerPosition = 0;
+        let stars = 0;
+        let questionsAnswered = 0;
+        let currentQuestion = null;
+        let selectedAnswer = null;
+        let isSpinning = false;
+        let gameFinished = false;
 
-        // Game functions
-        function startGame() {
-            document.getElementById('welcome-section').classList.add('hidden');
-            document.getElementById('game-section').classList.remove('hidden');
-            document.getElementById('game-section').classList.add('fade-in');
-            initializeTrail();
-            updateStats();
+        const colors = ['red', 'blue', 'green', 'purple', 'orange', 'pink'];
+        const houseEmojis = ['🏠', '🏡', '🏘️', '🏰', '🏯', '🏛️'];
+        const fearHousePositions = [3, 6, 9, 12, 15, 18]; // Posições das casas do medo
+        const fearHouseEmojis = ['💀', '👻', '🔥', '⚡', '🌙', '💥'];
 
-            // (CÓDIGO ADICIONADO) - Toca a música de fundo
-            sounds.backgroundMusic.play();
-        }
-
-        function initializeTrail() {
-            // ... (sem alterações)
-        }
-
-        function spinRoulette() {
-            if (isSpinning || gameFinished) return;
-
-            // (CÓDIGO ADICIONADO) - Toca o som de rolar o dado
-            sounds.diceRoll.play();
-            
-            isSpinning = true;
-            const roulette = document.getElementById('roulette');
-            const statusText = document.getElementById('roulette-status');
-            
-            statusText.textContent = 'Girando...';
-            
-            // Random rotation between 1080 and 2160 degrees (3-6 full rotations)
-            const rotation = 1080 + Math.random() * 1080;
-            roulette.style.transform = `rotate(${rotation}deg)`;
-            
-            setTimeout(() => {
-                const finalAngle = rotation % 360;
-                const colorIndex = Math.floor(finalAngle / 60);
-                const selectedColor = colors[colorIndex];
-                
-                statusText.textContent = `Cor sorteada: ${getColorName(selectedColor)}! 🎯`;
-                isSpinning = false;
-                
-                setTimeout(() => {
-                    movePlayer();
-                }, 1000);
-            }, 3000);
-        }
-
-        function getColorName(color) {
-            // ... (sem alterações)
-        }
-
-        function movePlayer() {
-            if (playerPosition >= 19) {
-                finishGame();
-                return;
-            }
+        // Video functions
+        function playVideo() {
+            const video = document.getElementById('intro-video');
+            const playBtn = document.getElementById('play-video');
             
-            // (CÓDIGO ADICIONADO) - Toca o som de movimento
-            sounds.move.play();
-            
-            // Remove current position
-            document.getElementById(`house-${playerPosition}`).classList.remove('current');
-            
-            // Move to next position
-            playerPosition++;
-            const newHouse = document.getElementById(`house-${playerPosition}`);
-            newHouse.classList.add('current');
-            
-            // Move pawn
-            const pawn = document.getElementById('player-pawn');
-            newHouse.appendChild(pawn);
-            
-            updateStats();
-            
-            setTimeout(() => {
-                showQuestion();
-            }, 800);
-        }
+            video.style.display = 'block';
+            playBtn.style.display = 'none';
+            video.play();
+            
+            video.onended = function() {
+                skipVideo();
+            };
+        }
 
-        function showQuestion() {
-            // ... (sem alterações)
-        }
+        function skipVideo() {
+            const videoContainer = document.getElementById('video-container');
+            videoContainer.classList.add('hidden');
+            setTimeout(() => {
+                videoContainer.style.display = 'none';
+            }, 500);
+        }
 
-        function selectModalAnswer(answerIndex, buttonElement) {
-            // ... (sem alterações)
-        }
+        // Game functions
+        function startGame() {
+            document.getElementById('welcome-section').classList.add('hidden');
+            document.getElementById('game-section').classList.remove('hidden');
+            document.getElementById('game-section').classList.add('fade-in');
+            initializeTrail();
+            updateStats();
+        }
 
-        function confirmAnswer() {
-            if (selectedAnswer === null) return;
-            
-            document.getElementById('question-modal').classList.add('hidden');
-            questionsAnswered++;
-            
-            const isCorrect = selectedAnswer === currentQuestion.correct;
-            
-            if (isCorrect) {
-                // (CÓDIGO ADICIONADO) - Toca som de acerto
-                sounds.coin.play(); 
-                stars++;
-                showStarEffect();
-                document.getElementById('roulette-status').textContent = 'Resposta correta! Você ganhou uma estrela! ⭐';
-            } else {
-                // (CÓDIGO ADICIONADO) - Toca som de erro
-                sounds.error.play();
-                showBombEffect();
-                document.getElementById('roulette-status').textContent = 'Resposta incorreta! Cuidado com a bomba! 💣';
-            }
-            
-            updateStats();
-            
-            setTimeout(() => {
-                if (playerPosition >= 19 || questionsAnswered >= gameData.length) {
-                    finishGame();
-                } else {
-                    document.getElementById('roulette-status').textContent = 'Gire a roleta novamente!';
-                }
-            }, 3000);
-        }
+        function initializeTrail() {
+            const trailPath = document.getElementById('trail-path');
+            trailPath.innerHTML = '';
+            
+            for (let i = 0; i < 20; i++) {
+                const house = document.createElement('div');
+                const isFearHouse = fearHousePositions.includes(i);
+                
+                if (isFearHouse) {
+                    house.className = 'trail-house house-fear';
+                    const fearIndex = fearHousePositions.indexOf(i);
+                    house.textContent = fearHouseEmojis[fearIndex];
+                    house.setAttribute('data-fear-index', fearIndex);
+                } else {
+                    const colorClass = `house-${colors[i % colors.length]}`;
+                    house.className = `trail-house ${colorClass}`;
+                    house.textContent = houseEmojis[i % houseEmojis.length];
+                }
+                
+                house.id = `house-${i}`;
+                
+                if (i === 0) {
+                    house.classList.add('current');
+                    const pawn = document.createElement('div');
+                    pawn.className = 'pawn';
+                    pawn.textContent = '👩';
+                    pawn.id = 'player-pawn';
+                    house.appendChild(pawn);
+                }
+                
+                trailPath.appendChild(house);
+            }
+        }
 
-        // Fear House Functions
-        function showFearHouse(fearIndex) {
-            // ... (sem alterações)
-        }
+        function spinRoulette() {
+            if (isSpinning || gameFinished) return;
+            
+            isSpinning = true;
+            const roulette = document.getElementById('roulette');
+            const statusText = document.getElementById('roulette-status');
+            
+            statusText.textContent = 'Girando...';
+            
+            // Random rotation between 1080 and 2160 degrees (3-6 full rotations)
+            const rotation = 1080 + Math.random() * 1080;
+            roulette.style.transform = `rotate(${rotation}deg)`;
+            
+            setTimeout(() => {
+                const finalAngle = rotation % 360;
+                const colorIndex = Math.floor(finalAngle / 60);
+                const selectedColor = colors[colorIndex];
+                
+                statusText.textContent = `Cor sorteada: ${getColorName(selectedColor)}! 🎯`;
+                isSpinning = false;
+                
+                setTimeout(() => {
+                    movePlayer();
+                }, 1000);
+            }, 3000);
+        }
 
-        let currentFearHouse = null;
-        let selectedFearAnswer = null;
-        let selectedFearSequence = [];
+        function getColorName(color) {
+            const colorNames = {
+                'red': 'Vermelho',
+                'blue': 'Azul', 
+                'green': 'Verde',
+                'purple': 'Roxo',
+                'orange': 'Laranja',
+                'pink': 'Rosa'
+            };
+            return colorNames[color] || color;
+        }
 
-        function selectFearAnswer(answerIndex, buttonElement) {
-            // ... (sem alterações)
-        }
+        function movePlayer() {
+            if (playerPosition >= 19) {
+                finishGame();
+                return;
+            }
+            
+            // Remove current position
+            document.getElementById(`house-${playerPosition}`).classList.remove('current');
+            
+            // Move to next position
+            playerPosition++;
+            const newHouse = document.getElementById(`house-${playerPosition}`);
+            newHouse.classList.add('current');
+            
+            // Move pawn
+            const pawn = document.getElementById('player-pawn');
+            newHouse.appendChild(pawn);
+            
+            updateStats();
+            
+            setTimeout(() => {
+                showQuestion();
+            }, 800);
+        }
 
-        function addToSequence(index, element) {
-            // ... (sem alterações)
-        }
+        function showQuestion() {
+            const currentHouse = document.getElementById(`house-${playerPosition}`);
+            const isFearHouse = currentHouse.classList.contains('house-fear');
+            
+            if (isFearHouse) {
+                const fearIndex = parseInt(currentHouse.getAttribute('data-fear-index'));
+                showFearHouse(fearIndex);
+            } else {
+                if (questionsAnswered >= gameData.length) {
+                    finishGame();
+                    return;
+                }
+                
+                currentQuestion = gameData[questionsAnswered];
+                selectedAnswer = null;
+                
+                document.getElementById('modal-question-text').textContent = currentQuestion.question;
+                
+                const answersContainer = document.getElementById('modal-answers-container');
+                answersContainer.innerHTML = '';
+                
+                currentQuestion.answers.forEach((answer, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'w-full p-3 text-left bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-300 border-2 border-transparent';
+                    button.textContent = answer;
+                    button.onclick = () => selectModalAnswer(index, button);
+                    answersContainer.appendChild(button);
+                });
+                
+                document.getElementById('question-modal').classList.remove('hidden');
+                document.getElementById('confirm-answer').disabled = true;
+            }
+        }
 
-        function clearSequence() {
-            // ... (sem alterações)
-        }
+        function selectModalAnswer(answerIndex, buttonElement) {
+            // Remove previous selections
+            document.querySelectorAll('#modal-answers-container button').forEach(btn => {
+                btn.classList.remove('border-blue-500', 'bg-blue-100');
+                btn.classList.add('border-transparent');
+            });
+            
+            // Highlight selected answer
+            buttonElement.classList.add('border-blue-500', 'bg-blue-100');
+            
+            selectedAnswer = answerIndex;
+            document.getElementById('confirm-answer').disabled = false;
+        }
 
-        function confirmFearAnswer() {
-            let isCorrect = false;
-            
-            if (currentFearHouse.type === 'password') {
-                isCorrect = selectedFearAnswer === currentFearHouse.correctAnswer;
-            } else if (currentFearHouse.type === 'multiple') {
-                isCorrect = selectedFearAnswer === currentFearHouse.correct;
-            } else if (currentFearHouse.type === 'sequence') {
-                isCorrect = JSON.stringify(selectedFearSequence) === JSON.stringify(currentFearHouse.correctOrder);
-            }
-            
-            const rewardElement = document.getElementById('fear-reward');
-            
-            if (isCorrect) {
-                // (CÓDIGO ADICIONADO) - Toca som de vitória (mais forte)
-                sounds.win.play();
-                rewardElement.innerHTML = `<div class="text-green-400 font-bold mb-2">✅ CORRETO!</div><div>${currentFearHouse.reward}</div>`;
-                stars += 2; // Casas do medo dão mais estrelas
-                showStarEffect();
-                showStarEffect(); // Duplo efeito
-                document.getElementById('roulette-status').textContent = 'Casa do Medo superada! Você ganhou 2 estrelas! ⭐⭐';
-            } else {
-                // (CÓDIGO ADICIONADO) - Toca som de erro
-                sounds.error.play();
-                let correctAnswerText = '';
-                if (currentFearHouse.type === 'password') {
-                    correctAnswerText = `A resposta correta era: <strong>${currentFearHouse.correctAnswer}</strong>`;
-                } else if (currentFearHouse.type === 'multiple') {
-                    correctAnswerText = `A resposta correta era: <strong>${currentFearHouse.answers[currentFearHouse.correct]}</strong>`;
-                } else if (currentFearHouse.type === 'sequence') {
-                    const correctSequence = currentFearHouse.correctOrder.map(index => currentFearHouse.elements[index]).join(' → ');
-                    correctAnswerText = `A ordem correta era: <strong>${correctSequence}</strong>`;
-                }
-                
-                rewardElement.innerHTML = `<div class="text-red-400 font-bold mb-2">❌ INCORRETO!</div><div class="mb-3">${correctAnswerText}</div><div>${currentFearHouse.reward}</div>`;
-                showBombEffect();
-                document.getElementById('roulette-status').textContent = 'Falhou na Casa do Medo! O terror continua... 💀';
-            }
-            
-            rewardElement.classList.remove('hidden');
-            document.getElementById('fear-confirm').classList.add('hidden');
-            document.getElementById('fear-continue').classList.remove('hidden');
-            
-            updateStats();
-        }
+        function confirmAnswer() {
+            if (selectedAnswer === null) return;
+            
+            document.getElementById('question-modal').classList.add('hidden');
+            questionsAnswered++;
+            
+            const isCorrect = selectedAnswer === currentQuestion.correct;
+            
+            if (isCorrect) {
+                stars++;
+                showStarEffect();
+                document.getElementById('roulette-status').textContent = 'Resposta correta! Você ganhou uma estrela! ⭐';
+            } else {
+                showBombEffect();
+                document.getElementById('roulette-status').textContent = 'Resposta incorreta! Cuidado com a bomba! 💣';
+            }
+            
+            updateStats();
+            
+            setTimeout(() => {
+                if (playerPosition >= 19 || questionsAnswered >= gameData.length) {
+                    finishGame();
+                } else {
+                    document.getElementById('roulette-status').textContent = 'Gire a roleta novamente!';
+                }
+            }, 3000);
+        }
 
-        function continueFearGame() {
-            // ... (sem alterações)
-        }
+        // Fear House Functions
+        function showFearHouse(fearIndex) {
+            const fearHouse = fearHouses[fearIndex];
+            currentFearHouse = fearHouse;
+            selectedFearAnswer = null;
+            
+            document.getElementById('fear-title').textContent = fearHouse.title;
+            document.getElementById('fear-question').textContent = fearHouse.question;
+            document.getElementById('fear-reward').classList.add('hidden');
+            document.getElementById('fear-continue').classList.add('hidden');
+            document.getElementById('fear-confirm').classList.remove('hidden');
+            document.getElementById('fear-confirm').disabled = true;
+            
+            const inputContainer = document.getElementById('fear-input-container');
+            inputContainer.innerHTML = '';
+            
+            if (fearHouse.type === 'password') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'w-full p-3 bg-gray-800 border-2 border-red-600 rounded-lg text-white text-center text-lg';
+                input.placeholder = 'Digite a resposta...';
+                input.oninput = () => {
+                    selectedFearAnswer = input.value.trim().toUpperCase();
+                    document.getElementById('fear-confirm').disabled = selectedFearAnswer === '';
+                };
+                inputContainer.appendChild(input);
+            } else if (fearHouse.type === 'multiple') {
+                fearHouse.answers.forEach((answer, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'w-full p-3 text-left bg-gray-800 hover:bg-gray-700 rounded-lg transition-all duration-300 border-2 border-transparent text-white mb-2';
+                    button.textContent = answer;
+                    button.onclick = () => selectFearAnswer(index, button);
+                    inputContainer.appendChild(button);
+                });
+            } else if (fearHouse.type === 'sequence') {
+                const sequenceContainer = document.createElement('div');
+                sequenceContainer.className = 'space-y-4';
+                
+                const elementsContainer = document.createElement('div');
+                elementsContainer.className = 'grid grid-cols-2 gap-2 mb-4';
+                elementsContainer.id = 'sequence-elements';
+                
+                fearHouse.elements.forEach((element, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'p-3 bg-gray-800 hover:bg-gray-700 rounded-lg text-white border-2 border-gray-600';
+                    button.textContent = element;
+                    button.onclick = () => addToSequence(index, element);
+                    elementsContainer.appendChild(button);
+                });
+                
+                const sequenceDisplay = document.createElement('div');
+                sequenceDisplay.className = 'bg-gray-900 border-2 border-red-600 rounded-lg p-4 min-h-16 text-center';
+                sequenceDisplay.id = 'sequence-display';
+                sequenceDisplay.innerHTML = '<span class="text-gray-400">Clique nos elementos na ordem correta...</span>';
+                
+                const clearButton = document.createElement('button');
+                clearButton.className = 'bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg mt-2';
+                clearButton.textContent = 'Limpar';
+                clearButton.onclick = clearSequence;
+                
+                sequenceContainer.appendChild(elementsContainer);
+                sequenceContainer.appendChild(sequenceDisplay);
+                sequenceContainer.appendChild(clearButton);
+                inputContainer.appendChild(sequenceContainer);
+                
+                selectedFearSequence = [];
+            }
+            
+            document.getElementById('fear-modal').classList.remove('hidden');
+        }
 
-        function showStarEffect() {
-            // ... (sem alterações)
-        }
+        let currentFearHouse = null;
+        let selectedFearAnswer = null;
+        let selectedFearSequence = [];
 
-        function showBombEffect() {
-            // ... (sem alterações)
-        }
+        function selectFearAnswer(answerIndex, buttonElement) {
+            document.querySelectorAll('#fear-input-container button').forEach(btn => {
+                btn.classList.remove('border-red-400', 'bg-red-800');
+                btn.classList.add('border-transparent');
+            });
+            
+            buttonElement.classList.add('border-red-400', 'bg-red-800');
+            selectedFearAnswer = answerIndex;
+            document.getElementById('fear-confirm').disabled = false;
+        }
 
-        function updateStats() {
-            // ... (sem alterações)
-        }
+        function addToSequence(index, element) {
+            selectedFearSequence.push(index);
+            const display = document.getElementById('sequence-display');
+            
+            if (selectedFearSequence.length === 1) {
+                display.innerHTML = '';
+            }
+            
+            const span = document.createElement('span');
+            span.className = 'bg-red-600 text-white px-3 py-1 rounded-lg mr-2 mb-2 inline-block';
+            span.textContent = element;
+            display.appendChild(span);
+            
+            if (selectedFearSequence.length === currentFearHouse.elements.length) {
+                document.getElementById('fear-confirm').disabled = false;
+            }
+        }
 
-        function finishGame() {
-            gameFinished = true;
-            document.getElementById('game-section').classList.add('hidden');
-            document.getElementById('results-section').classList.remove('hidden');
-            document.getElementById('results-section').classList.add('fade-in');
-            
-            // (CÓDIGO ADICIONADO) - Para a música e toca som de vitória final
-            sounds.backgroundMusic.pause();
-            sounds.win.play();
+        function clearSequence() {
+            selectedFearSequence = [];
+            document.getElementById('sequence-display').innerHTML = '<span class="text-gray-400">Clique nos elementos na ordem correta...</span>';
+            document.getElementById('fear-confirm').disabled = true;
+        }
 
-            displayResults();
-        }
+        function confirmFearAnswer() {
+            let isCorrect = false;
+            
+            if (currentFearHouse.type === 'password') {
+                isCorrect = selectedFearAnswer === currentFearHouse.correctAnswer;
+            } else if (currentFearHouse.type === 'multiple') {
+                isCorrect = selectedFearAnswer === currentFearHouse.correct;
+            } else if (currentFearHouse.type === 'sequence') {
+                isCorrect = JSON.stringify(selectedFearSequence) === JSON.stringify(currentFearHouse.correctOrder);
+            }
+            
+            const rewardElement = document.getElementById('fear-reward');
+            
+            if (isCorrect) {
+                rewardElement.innerHTML = `<div class="text-green-400 font-bold mb-2">✅ CORRETO!</div><div>${currentFearHouse.reward}</div>`;
+                stars += 2; // Casas do medo dão mais estrelas
+                showStarEffect();
+                showStarEffect(); // Duplo efeito
+                document.getElementById('roulette-status').textContent = 'Casa do Medo superada! Você ganhou 2 estrelas! ⭐⭐';
+            } else {
+                let correctAnswerText = '';
+                if (currentFearHouse.type === 'password') {
+                    correctAnswerText = `A resposta correta era: <strong>${currentFearHouse.correctAnswer}</strong>`;
+                } else if (currentFearHouse.type === 'multiple') {
+                    correctAnswerText = `A resposta correta era: <strong>${currentFearHouse.answers[currentFearHouse.correct]}</strong>`;
+                } else if (currentFearHouse.type === 'sequence') {
+                    const correctSequence = currentFearHouse.correctOrder.map(index => currentFearHouse.elements[index]).join(' → ');
+                    correctAnswerText = `A ordem correta era: <strong>${correctSequence}</strong>`;
+                }
+                
+                rewardElement.innerHTML = `<div class="text-red-400 font-bold mb-2">❌ INCORRETO!</div><div class="mb-3">${correctAnswerText}</div><div>${currentFearHouse.reward}</div>`;
+                showBombEffect();
+                document.getElementById('roulette-status').textContent = 'Falhou na Casa do Medo! O terror continua... 💀';
+            }
+            
+            rewardElement.classList.remove('hidden');
+            document.getElementById('fear-confirm').classList.add('hidden');
+            document.getElementById('fear-continue').classList.remove('hidden');
+            
+            updateStats();
+        }
 
-        function displayResults() {
-            // ... (sem alterações)
-        }
+        function continueFearGame() {
+            document.getElementById('fear-modal').classList.add('hidden');
+            
+            setTimeout(() => {
+                if (playerPosition >= 19) {
+                    finishGame();
+                } else {
+                    document.getElementById('roulette-status').textContent = 'Gire a roleta novamente!';
+                }
+            }, 1000);
+        }
 
-        function restartGame() {
-            // (CÓDIGO ADICIONADO) - Para a música, reinicia e toca de novo
-            sounds.backgroundMusic.pause();
-            sounds.backgroundMusic.currentTime = 0;
-            sounds.backgroundMusic.play();
+        function showStarEffect() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const star = document.createElement('div');
+                    star.className = 'star-effect';
+                    star.textContent = '⭐';
+                    star.style.left = Math.random() * window.innerWidth + 'px';
+                    star.style.top = Math.random() * window.innerHeight + 'px';
+                    document.body.appendChild(star);
+                    
+                    setTimeout(() => {
+                        star.remove();
+                    }, 2000);
+                }, i * 200);
+            }
+        }
 
-            playerPosition = 0;
-            stars = 0;
-            questionsAnswered = 0;
-            currentQuestion = null;
-            selectedAnswer = null;
-            isSpinning = false;
-            gameFinished = false;
-            
-            document.getElementById('results-section').classList.add('hidden');
-            document.getElementById('game-section').classList.remove('hidden');
-            document.getElementById('roulette-status').textContent = 'Clique na roleta para começar!';
-            
-            // Reset roulette rotation
-            document.getElementById('roulette').style.transform = 'rotate(0deg)';
-            
-            initializeTrail();
-            updateStats();
-        }
+        function showBombEffect() {
+            const bomb = document.createElement('div');
+            bomb.className = 'bomb-effect';
+            bomb.textContent = '💥';
+            bomb.style.left = '50%';
+            bomb.style.top = '50%';
+            bomb.style.transform = 'translate(-50%, -50%)';
+            document.body.appendChild(bomb);
+            
+            setTimeout(() => {
+                bomb.remove();
+            }, 1500);
+        }
 
-        function showResources() {
-            // ... (sem alterações)
-        }
+        function updateStats() {
+            document.getElementById('stars-count').textContent = stars;
+            document.getElementById('position-count').textContent = playerPosition + 1;
+            document.getElementById('questions-answered').textContent = questionsAnswered;
+        }
 
-        function backToWelcome() {
-            // (CÓDIGO ADICIONADO) - Para a música de fundo e reinicia o tempo dela
-            sounds.backgroundMusic.pause();
-            sounds.backgroundMusic.currentTime = 0;
+        function finishGame() {
+            gameFinished = true;
+            document.getElementById('game-section').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+            document.getElementById('results-section').classList.add('fade-in');
+            
+            displayResults();
+        }
 
-            document.getElementById('resources-section').classList.add('hidden');
-            document.getElementById('game-section').classList.add('hidden');
-            document.getElementById('results-section').classList.add('hidden');
-            document.getElementById('welcome-section').classList.remove('hidden');
-            
-            // Reset game
-            playerPosition = 0;
-            stars = 0;
-            questionsAnswered = 0;
-            currentQuestion = null;
-            selectedAnswer = null;
-            isSpinning = false;
-            gameFinished = false;
-        }
+        function displayResults() {
+            const percentage = questionsAnswered > 0 ? Math.round((stars / questionsAnswered) * 100) : 0;
+            document.getElementById('final-score').textContent = `${stars} estrelas de ${questionsAnswered} perguntas (${percentage}%)`;
+            
+            let emoji, message;
+            if (percentage >= 90) {
+                emoji = '🏆';
+                message = 'Fantástico! Você é uma estrela do conhecimento!';
+            } else if (percentage >= 70) {
+                emoji = '🌟';
+                message = 'Muito bem! Você brilha no cuidado com a saúde!';
+            } else if (percentage >= 50) {
+                emoji = '💪';
+                message = 'Bom trabalho! Continue sua jornada de aprendizado!';
+            } else {
+                emoji = '📚';
+                message = 'Que tal explorar mais os recursos educativos?';
+            }
+            
+            document.getElementById('score-emoji').textContent = emoji;
+            document.getElementById('score-message').textContent = message;
+        }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // ... (sem alterações)
-        });
-    </script>
+        function restartGame() {
+            playerPosition = 0;
+            stars = 0;
+            questionsAnswered = 0;
+            currentQuestion = null;
+            selectedAnswer = null;
+            isSpinning = false;
+            gameFinished = false;
+            
+            document.getElementById('results-section').classList.add('hidden');
+            document.getElementById('game-section').classList.remove('hidden');
+            document.getElementById('roulette-status').textContent = 'Clique na roleta para começar!';
+            
+            // Reset roulette rotation
+            document.getElementById('roulette').style.transform = 'rotate(0deg)';
+            
+            initializeTrail();
+            updateStats();
+        }
+
+        function showResources() {
+            document.getElementById('results-section').classList.add('hidden');
+            document.getElementById('resources-section').classList.remove('hidden');
+            document.getElementById('resources-section').classList.add('fade-in');
+        }
+
+        function backToWelcome() {
+            document.getElementById('resources-section').classList.add('hidden');
+            document.getElementById('game-section').classList.add('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+            document.getElementById('welcome-section').classList.remove('hidden');
+            
+            // Reset game
+            playerPosition = 0;
+            stars = 0;
+            questionsAnswered = 0;
+            currentQuestion = null;
+            selectedAnswer = null;
+            isSpinning = false;
+            gameFinished = false;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-skip video after 3 seconds if not interacted with
+            setTimeout(() => {
+                if (!document.getElementById('video-container').classList.contains('hidden')) {
+                    skipVideo();
+                }
+            }, 3000);
+        });
+    </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'994e5570e7b79096',t:'MTc2MTUyNzYzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
